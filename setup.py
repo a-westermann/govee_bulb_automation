@@ -12,15 +12,15 @@ except:
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django-bulb-automation',
+    name='govee-bulb-automation',
     version='0.1',
     packages=find_packages(),
     include_package_data=True,
     license='MIT License',
-    description='Automation app for controlling smart light bulbs',
+    description='Automation app for controlling Govee smart light bulbs',
     long_description=README,
     long_description_content_type='text/markdown',
-    url='https://github.com/a-westermann/shared_calendar',
+    url='https://github.com/a-westermann/govee_bulb_automation',
     author='Andrew Westermann',
     author_email='a.westermann.19@gmail.com',
     classifiers=[
