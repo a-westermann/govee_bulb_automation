@@ -27,7 +27,6 @@ function toggleLight(state) {
     fetch('/toggle-light/', {
         method: 'POST',
         headers: {
-            'X-CSRFToken': '{{ csrf_token }}',
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({ action: 'toggle' })
