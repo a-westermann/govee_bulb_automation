@@ -2,9 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TEST</title>
+    <title>Light Automation</title>
 </head>
 <body>
-{{devices}}
+<div class="container-fluid" style="padding-top:50px">
+    <div class="row">
+        <div class="col-lg-6">
+            <button type="button" class="btn btn-xl buttons" onClick="toggleLight('on')">On</button>
+        </div>
+        <div class="col-lg-6">
+            <button type="button" class="btn btn-xl buttons" onClick="toggleLight('off')">Off</button>
+        </div>
+    </div>
+</div>
+<div class="container-fluid" style="padding-top:100px">
+    {{devices}}
+</div>
 </body>
+
+<button class="btn btn-success" onclick="toggleLight()">Toggle Light</button>
+
+<script>
+function toggleLight(state) {
+    fetch('/toggle-light/', {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ action: 'toggle' })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Light toggled!');
+        } else {
+            alert('Failed to toggle light.');
+        }
+    });
+}
+</script>
+
 </html>
