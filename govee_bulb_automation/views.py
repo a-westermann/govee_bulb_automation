@@ -10,8 +10,8 @@ import logging
 from django.contrib.auth.decorators import login_required
 from django.db import models
 import requests
-from models import Device
-from payloads import *
+from .models import Device
+from .payloads import *
 
 
 API_KEY = open('/home/ubuntu/govee_api_key').read().strip()
