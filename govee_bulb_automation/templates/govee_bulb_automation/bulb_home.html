@@ -18,25 +18,25 @@
 <div class="container-fluid" style="padding-top:100px">
     {{devices}}
 </div>
-</body>
 
-<!--<script>-->
-<!--function toggleLight(state) {-->
-<!--    fetch('/toggle-light/', {-->
-<!--        method: 'POST',-->
-<!--        headers: {-->
-<!--            'Content-Type': 'application/json'-->
-<!--        },-->
-<!--        body: JSON.stringify({ state: state })-->
-<!--    })-->
-<!--    .then(response => {-->
-<!--        if (response.ok) {-->
-<!--            alert(`Light turned ${state}`);-->
-<!--        } else {-->
-<!--            alert('Failed to change light state.');-->
-<!--        }-->
-<!--    });-->
-<!--}-->
-<!--</script>-->
+<script>
+function toggleLight(state) {
+    fetch('/toggle-light/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ state: state })
+    })
+    .then(response => {
+        if (response.ok) {
+            alert(`Light turned ${state}`);
+        } else {
+            alert('Failed to change light state.');
+        }
+    });
+}
+</script>
+</body>
 
 </html>
