@@ -29,13 +29,13 @@ function toggleLight(state) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ action: 'toggle' })
+        body: JSON.stringify({ state: state })
     })
     .then(response => {
         if (response.ok) {
-            alert('Light toggled!');
+            alert(`Light turned ${state}`);
         } else {
-            alert('Failed to toggle light.');
+            alert('Failed to change light state.');
         }
     });
 }
