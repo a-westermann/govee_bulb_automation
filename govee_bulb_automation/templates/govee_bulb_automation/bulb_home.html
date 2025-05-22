@@ -8,10 +8,10 @@
 <div class="container-fluid" style="padding-top:50px">
     <div class="row">
         <div class="col-lg-6">
-            <button type="button" class="btn btn-xl buttons" onClick="toggleLight('on')">On</button>
+            <button type="button" class="btn btn-xl buttons" >On</button>
         </div>
         <div class="col-lg-6">
-            <button type="button" class="btn btn-xl buttons" onClick="toggleLight('off')">Off</button>
+            <button type="button" class="btn btn-xl buttons" >Off</button>
         </div>
     </div>
 </div>
@@ -20,25 +20,23 @@
 </div>
 </body>
 
-<button class="btn btn-success" onclick="toggleLight()">Toggle Light</button>
-
-<script>
-function toggleLight(state) {
-    fetch('/toggle-light/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ state: state })
-    })
-    .then(response => {
-        if (response.ok) {
-            alert(`Light turned ${state}`);
-        } else {
-            alert('Failed to change light state.');
-        }
-    });
-}
-</script>
+<!--<script>-->
+<!--function toggleLight(state) {-->
+<!--    fetch('/toggle-light/', {-->
+<!--        method: 'POST',-->
+<!--        headers: {-->
+<!--            'Content-Type': 'application/json'-->
+<!--        },-->
+<!--        body: JSON.stringify({ state: state })-->
+<!--    })-->
+<!--    .then(response => {-->
+<!--        if (response.ok) {-->
+<!--            alert(`Light turned ${state}`);-->
+<!--        } else {-->
+<!--            alert('Failed to change light state.');-->
+<!--        }-->
+<!--    });-->
+<!--}-->
+<!--</script>-->
 
 </html>
