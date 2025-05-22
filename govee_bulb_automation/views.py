@@ -21,8 +21,8 @@ def bulb_home(request):
     response = requests.get('https://developer-api.govee.com/v1/devices',
                            headers={'Accept': 'application/json','Govee-API-Key': API_KEY})
     device_content = json.loads(response.content)
-    for d in device_content['data']['devices']:
-        DEVICES.append(Device(d['device'], d['model'], d['deviceName']))
+    # for d in device_content['data']['devices']:
+    #     DEVICES.append(Device(d['device'], d['model'], d['deviceName']))
     context = {'devices':DEVICES}
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
