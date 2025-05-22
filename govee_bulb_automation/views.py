@@ -12,7 +12,7 @@ from django.db import models
 import requests
 
 
-API_KEY = open('home/ubuntu/govee_api_key').read().strip()
+API_KEY = open('/home/ubuntu/govee_api_key').read().strip()
 
 def bulb_home(request):
     devices = requests.get('https://developer-api.govee.com/v1/devices',
