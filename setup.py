@@ -41,5 +41,6 @@ setup(
     ],
     install_requires=[
         'Django>=4.2.0',
+        'requests>=2.32.3'
     ],
 )

@@ -9,7 +9,12 @@ import json
 import logging
 from django.contrib.auth.decorators import login_required
 from django.db import models
+import requests
 
 
 def bulb_home(request):
-    return render(request, 'govee_bulb_automation/bulb_home.html')
+    devices = requests.get('https://developer-api.govee.com/v1/devices')
+    response = json.loads(devices.content)
+    context = {'devices':response}
+    return render(request, 'govee_bulb_automation/bulb_home.html',
+                  context=context)
