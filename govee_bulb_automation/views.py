@@ -12,11 +12,11 @@ from django.db import models
 import requests
 
 
-API_KEY = open('~/govee_api_key.txt').read().strip()
+# API_KEY = open('~/govee_api_key.txt').read().strip()
 
 def bulb_home(request):
     devices = requests.get('https://developer-api.govee.com/v1/devices',
-                           headers={'Accept': 'application/json','Govee-API-Key':API_KEY})
+                           headers={'Accept': 'application/json','Govee-API-Key':''})
     response = json.loads(devices.content)
     context = {'devices':response}
     return render(request, 'govee_bulb_automation/bulb_home.html',
