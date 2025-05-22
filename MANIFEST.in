@@ -1,0 +1,2 @@
+recursive-include govee_bulb_automation/templates *.html
+recursive-include govee_bulb_automation/static *
