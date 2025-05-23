@@ -33,14 +33,14 @@ def bulb_home(request):
 def toggle_light(request):
     data = json.loads(request.body)
     state = data.get('state')
-    logger.log('toggle light')
+    logger.log(level=1, msg='toggle light')
     response = None
 
     for device in DEVICES:
         payload = get_toggle_light(device.device_id, device.model, state)
         response = requests.post('https://developer-api.govee.com/v1/devices/control', data=json.dumps(payload),
                                  headers={'Accept': 'application/json','Govee-API-Key': API_KEY})
-        logger.log(response.status_code, response.content)
+        logger.log(level=1, msg=response.content)
         return JsonResponse({'success': True})
     if response:
         decoded = response.json()
