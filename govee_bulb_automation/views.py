@@ -15,24 +15,22 @@ from .payloads import *
 
 
 logger = logging.getLogger('govee_bulb_automation')
-DEVICES = list()
 
 def bulb_home(request):
-    global DEVICES
-    DEVICES = get_devices()
-    context = {'devices':DEVICES}
+    devices = get_devices()
+    context = {'devices':devices}
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
 @csrf_exempt
 def toggle_light(request):
-    response = get_devices()
+    devices = get_devices()
     data = json.loads(request.body)
     state = data.get('state')
-    logger.log(level=10, msg=f'toggle light. Devices: {len(DEVICES)}')
+    logger.log(level=10, msg=f'toggle light. Devices: {len(devices)}')
     response = None
 
-    for device in DEVICES:
+    for device in devices:
         payload = get_toggle_light(device.device_id, device.model, state)
         response = requests.post('https://developer-api.govee.com/v1/devices/control', data=json.dumps(payload),
                                  headers={'Accept': 'application/json','Govee-API-Key': API_KEY})
