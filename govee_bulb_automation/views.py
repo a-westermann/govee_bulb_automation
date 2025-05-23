@@ -17,16 +17,14 @@ from .payloads import *
 logger = logging.getLogger('govee_bulb_automation')
 
 def bulb_home(request):
-    # devices = get_devices()
-    devices = []
+    devices = get_devices()
     context = {'devices':devices}
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
 @csrf_exempt
 def toggle_light(request):
-    # devices = get_devices()
-    devices = []
+    devices = get_devices()
     data = json.loads(request.body)
     state = data.get('state')
     logger.log(level=10, msg=f'toggle light. Devices: {len(devices)}')
