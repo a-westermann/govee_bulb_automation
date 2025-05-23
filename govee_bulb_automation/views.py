@@ -17,7 +17,8 @@ from .payloads import *
 logger = logging.getLogger('govee_bulb_automation')
 
 def bulb_home(request):
-    devices = get_devices()
+    # devices = get_devices()
+    devices = None
     context = {'devices':devices}
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)

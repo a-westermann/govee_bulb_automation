@@ -2,8 +2,7 @@ import requests
 import json
 from models import Device
 
-# API_KEY = open('/home/ubuntu/govee_api_key').read().strip()
-API_KEY = ''
+API_KEY = open('/home/ubuntu/govee_api_key').read().strip()
 
 def get_devices() -> list[Device]:
     response = requests.get('https://developer-api.govee.com/v1/devices',
