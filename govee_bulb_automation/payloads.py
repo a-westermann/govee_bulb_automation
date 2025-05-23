@@ -33,13 +33,13 @@ def get_toggle_light(device_id, model, value):
     return {
         "device": device_id,
         "model": model,
-        # "cmd": {
-        #     "name": "turn",
-        #     "value": value
-        # }
-        "capability": {
-            "type": "devices.capabilities.on_off",
-            "instance": "powerSwitch",
+        "cmd": {
+            "name": "turn",
             "value": value
         }
+        # "capability": {
+        #     "type": "devices.capabilities.on_off",
+        #     "instance": "powerSwitch",
+        #     "value": value
+        # }
     }

@@ -32,7 +32,9 @@ def toggle_light(request):
 
     for device in devices:
         payload = get_toggle_light(device.device_id, device.model, state)
-        response = requests.post('https://developer-api.govee.com/v1/devices/control', data=json.dumps(payload),
+        endpoint = 'https://openapi.api.govee.com/router/api/v1/device/control'
+        # endpoint = 'https://developer-api.govee.com/v1/devices/control'
+        response = requests.post(endpoint, data=json.dumps(payload),
                                  headers={'Accept': 'application/json','Govee-API-Key': API_KEY})
         logger.log(level=10, msg=response.content)
     if response:
