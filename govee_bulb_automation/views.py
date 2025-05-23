@@ -35,7 +35,6 @@ def toggle_light(request):
         response = requests.post('https://developer-api.govee.com/v1/devices/control', data=json.dumps(payload),
                                  headers={'Accept': 'application/json','Govee-API-Key': API_KEY})
         logger.log(level=10, msg=response.content)
-        return JsonResponse({'success': True})
     if response:
         decoded = response.json()
         toggle_light_response = {
