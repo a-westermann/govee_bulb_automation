@@ -30,7 +30,7 @@ function toggleLight(state) {
     })
     .then(response => {
         if (response.ok) {
-            alert(`Light turned ${state}\n${response.content.response}`);
+            alert(`Light turned ${state}\n`);
         } else {
             alert('Failed to change light state.');
         }
