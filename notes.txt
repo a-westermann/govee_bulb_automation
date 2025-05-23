@@ -1,3 +1,9 @@
 # Option A: Console app that I call from web page passing args.
 # Option B: new app integrated into Django   <------ BEST OPTION (also hardest)
 # Option C: write code directly in the site repo
+
+Ideas:
+Toggle On/Off buttons
+Slider for brightness
+Temp chooser
+Color chooser ?
