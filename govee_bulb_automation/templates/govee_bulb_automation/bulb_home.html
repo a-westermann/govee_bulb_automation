@@ -28,9 +28,10 @@ function toggleLight(state) {
         },
         body: JSON.stringify({ state: state })
     })
-    .then(response => {
-        if (response.ok) {
-            alert(`Light turned ${state}\n`);
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Light turned ${state}\n${JSON.stringify(data.response, null, 2)}`);
         } else {
             alert('Failed to change light state.');
         }
