@@ -48,6 +48,8 @@ def toggle_light(request):
             'status_code': response.status_code,
             'response': decoded
         }
+        return JsonResponse({'success': True, 'response': toggle_light_response})
     else:
         toggle_light_response = {}
-    return JsonResponse({'success': True, 'response': toggle_light_response})
+        return JsonResponse({'success': False, 'response': toggle_light_response})
+
