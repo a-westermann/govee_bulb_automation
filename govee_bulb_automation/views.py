@@ -14,7 +14,7 @@ from .models import Device
 from .payloads import *
 
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('govee_bulb_automation')
 
 API_KEY = open('/home/ubuntu/govee_api_key').read().strip()
 DEVICES = []
@@ -37,6 +37,7 @@ def toggle_light(request):
     response = None
 
     for device in DEVICES:
+
         payload = get_toggle_light(device.device_id, device.model, state)
         response = requests.post('https://developer-api.govee.com/v1/devices/control', data=json.dumps(payload),
                                  headers={'Accept': 'application/json','Govee-API-Key': API_KEY})
