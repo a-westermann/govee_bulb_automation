@@ -1,0 +1,457 @@
+.scrolling_image_index {
+    background-color: #eee;
+    font-family: "Calibri", sans-serif;
+    font-weight: 300;
+    background-image:url(/static/girl_phone_ultrawide.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 900px;
+    /*min-height: 100%;*/
+    /*width: auto;*/
+    /*min-width: 800px;*/
+    background-position: bottom, right;
+}
+.girl-phone-image {
+    background: url('/static/girl_phone_background.png');
+    background-size: cover;
+
+}
+.mother-girl-book{
+    background: url('/static/mother_kid_book_narrow.png');
+    /*background-position: center;*/
+    /*background-size: auto 100%;*/
+    /*height: fit-content;*/
+    background-size: cover;
+    /*background-repeat: no-repeat;*/
+    background-attachment: fixed;
+    /*overflow: scroll;*/
+}
+.padding-bottom{
+    padding-bottom: 200px;
+}
+.padding-top{  /* don't change, used for base.html */
+    padding-top: 80px;
+}
+/*body {*/
+/*    opacity: 0; !* Initially hide the page *!*/
+/*    transition: opacity 1s ease-in-out; !* Add a smooth transition *!*/
+/*}*/
+/*body.fade-in {*/
+/*    opacity: 1; !* Make the page visible *!*/
+/*}*/
+header {
+    height: 80px;
+    background-color: ghostwhite;
+}
+.header-block-one{
+    height: 80px;
+    /*min-width: 100%;*/
+    /*width: 120px;*/
+    background-color: coral;
+}
+.header-block-two{
+    height: 80px;
+    /*width: 120px;*/
+    background-color: #ffbb00;
+}
+.header-block-three{
+    height: 80px;
+    /*width: 120px;*/
+    background-color: #000000;
+}
+
+.front{
+    z-index: 1100;
+}
+.dropdown-menu{
+    /*max-width: 40px;*/
+    /*padding-left: 5px;*/
+    border-style: solid;
+    border-color: darkslategrey;
+}
+.margin-right{
+    margin-right: 10px;
+}
+.margin-left{
+    margin-left: 10px;
+}
+.justify-content-right{
+    justify-content: right;
+}
+.align-right{
+    text-align: right;
+    list-style: none;
+}
+.alighn-left{
+    text-align: left;
+    list-style: none;
+}
+.buttons {
+    background-color: coral;
+    border-color: white;
+    color: white;
+    font-weight: bold;
+}
+.btn-yellow{
+    background-color: #ffbb00;
+    border-color: white;
+    color: white;
+    font-weight: bold;
+}
+.btn-xl {
+    padding: 20px 30px;
+    border-radius: 10px;
+    font-size: 40px;
+}
+/*hover color change*/
+.buttons:hover, .buttons:focus, .buttons:active, .buttons.active, .open>.dropdown-toggle.buttons {
+    color: black;
+    background-color: white;
+    border-color: white;
+}
+.clickable:hover, .buttons:focus, .buttons:active, .buttons.active, .open>.dropdown-toggle.buttons {
+    background-color: black;
+    border-color: white;
+}
+.clickable-reverse:hover{
+    background-color: coral;
+}
+.scale-up {
+    scale: 2;
+}
+.line-height-short{
+    line-height: 0.6;
+}
+.line-height-md{
+    line-height: 0.85;
+}
+
+
+.jumbotron-main{
+    background-image: url( '/static/origami.png' );
+    /*link: url('/activities/');*/
+    background-size: cover;
+    background-position: center;
+}
+.jumbotron-secondary{
+    background-image: url('/static/mother_kid_book.png');
+    background-size: cover;
+    background-position: bottom;
+}
+.jumbotron-tertiary{
+    background-image: url('/static/kid_quiz.png');
+    background-size: cover;
+    background-position: center;
+}
+
+/*This is a BAD way to do it. Make it MODULAR*/
+.learn-more-jumbo{
+    border-style: solid;
+    border-color: coral;
+    }
+.nih{
+    background-image: url('/static/NIH-Emblem.png');
+    background-size: cover;
+    background-position: center;
+    /*background-color: rgb(128, 128, 128);*/
+}
+.fairplay{
+    background-image: url('/static/fairplay_emblem.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.healthychildren{
+    background-image: url('/static/healthychildren_emblem.png');
+    background-size: cover;
+    background-position: left;
+}
+
+.hero {
+    /*padding-bottom: 10%; !* = ( 600 / 1600 ) x 100 *!*/
+    /*background-image: url('/static/reverse_gradient.png');*/
+    background-size: cover;
+    min-height: 1200px;
+    height: fit-content;
+    background-repeat: repeat-x;
+}
+.join-block{
+    /*background-image: url('/static/reverse_gradient.png');*/
+    background-color: chocolate;
+    background-size: contain;
+    background-repeat: repeat-x;
+}
+.dev-banner{
+    background-color: red;
+}
+.text-large{
+    font-size: 140%;
+    text-justify: inter-word;  /*doesn't work*/
+}
+.text-blend{
+    color: white;
+    mix-blend-mode: difference;
+}
+.text-larger{
+    /*    color: white;*/
+    /*mix-blend-mode: difference;*/
+    font-size: 160%;
+    /*text-justify: inter-word;*/
+}
+.text-largerer{
+    font-size: 200%;
+}
+.text-xl{
+    font-size: 350%;
+    text-justify: inter-word;  /*doesn't work*/
+}
+.text-xxl{
+    font-size: 600%;
+}
+.text-small{
+    font-size: 80%;
+}
+.font{
+    font-family: "Helvetica Neue", sans-serif;
+}
+.text-dark{
+    color: darkslategrey;
+    font-family: Calibri,  sans-serif;
+}
+.text-gray{
+    color: dimgray;
+    font-family: Calibri, sans-serif;
+}
+.text-light{
+    color: ghostwhite;
+    font-family: Poppins, sans-serif;
+    text-decoration: none;
+}
+.text-light-green{
+    color: mediumseagreen;
+}
+.text-green{
+    color: green;
+}
+.chocolate{
+    color: chocolate;
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+.orange-white-gradient{
+    background: -webkit-linear-gradient(#eeeeee, #FF7200);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.text-ultra-warning{
+    color: yellow;
+    text-shadow: -2px 0 chocolate, 0 2px chocolate, 2px 0 chocolate, 0 -2px chocolate;
+}
+.white-shadow{
+    text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+.text-danger{
+    color: crimson;
+}
+.text-warning{
+    color: gold;
+}
+.text-darkyellow{
+    color: darkgoldenrod;
+}
+.text-shadow{
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+}
+.stroke{
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+.text-bg{
+    background: rgba(0, 0, 0, 0.05); /* dark overlay */
+}
+.background-dark{
+    background: rgba(0, 0, 0, 1);
+}
+.background-yellow{
+    background: #ffbb00;
+}
+.background-orange{
+    background: rgba(220, 85, 0, 1);
+}
+.background-lightblue{
+    background: rgba(165, 215, 255, 1);
+}
+.text-faint{
+    color: darkslategray;
+    font-size: 80%;
+}
+.kerning-l{
+    font-kerning: none;
+}
+
+.page-header h1 {
+    margin-top: 0px;
+}
+.page-header {
+    height: 60px;
+    margin-top: 0px;
+    background-size: cover;
+    background-image: url('/static/title_bar.png');
+}
+.white-space {
+    white-space: pre;
+}
+.top-buffer{  /* for when a row collapses */
+    margin-top: 80px;
+}
+
+.image-center{
+    display: flex;
+    justify-content: center;
+}
+
+
+.enlarge-onhover{
+    overflow: hidden;
+}
+.enlarge-onhover img{
+    transition: all 0.6s ease-in-out;
+    object-fit: cover;
+    width: auto;
+    height: 100%;
+}
+.enlarge-onhover span{
+    transition: all 0.6s ease-in-out;
+}
+.enlarge-onhover:hover img{
+    transform: scale(1.2, 1.2);
+    /*transform: scale(30, 2);*/
+}
+.enlarge-onhover:hover span{
+    transform: scale(1.2, 1.2);
+}
+
+/* Media - sizing based on screen size */
+@media (min-width: 0px) {
+    header{
+        font-size: 3vw;
+    }
+    .index-image_adjustments{
+        background-position: calc(50% - 200px) 16px;
+        background-size: 380%;
+    }
+    .mother-girl-book-size{
+        background-position: calc(50% + 80px) 50%;
+    }
+    .index-text-shadow{
+        text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    }
+    .index-hero-text{
+        font-size: 350%;
+    }
+    .index-stats-text{
+        font-size: 200%;
+    }
+    .index-stats-text-num{
+        font-size: 400%;
+    }
+    .container-small {
+        width: 300px;
+    }
+    .container-large {
+        width: 970px;
+    }
+}
+@media (min-width: 600px) {
+    header{
+        font-size: 2vw;
+    }
+    .index-image_adjustments{
+        background-position: 70% 95%;
+        background-size: cover;
+    }
+    .mother-girl-book-size{
+        background-position: 50%;
+    }
+    .index-text-shadow{
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    .index-hero-text{
+        font-size: 450%;
+    }
+    .index-stats-text{
+        font-size: 200%;
+    }
+    .index-stats-text-num{
+        font-size: 400%;
+    }
+    .container-small {
+        width: 400px;
+    }
+    .container-large {
+        width: 1170px;
+    }
+}
+@media (min-width: 1200px) {
+    header{
+        font-size: 1.5vw;
+    }
+    .index-image_adjustments{
+        background-position: 50% 75%;
+        background-size: cover;
+    }
+    .mother-girl-book-size{
+        background-position: 50%;
+    }
+    .index-text-shadow{
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    .index-hero-text{
+        font-size: 550%;
+    }
+    .index-stats-text{
+        font-size: 250%;
+    }
+    .index-stats-text-num{
+        font-size: 500%;
+    }
+    .container-small {
+        width: 500px;
+    }
+    .container-large {
+        width: 1500px;
+    }
+}
+@media (min-width: 1680px) {
+    header{
+        font-size: 0.85vw;
+    }
+    .index-image_adjustments{
+        background-position: 50% -50px;
+        background-size: cover;
+    }
+    .mother-girl-book-size{
+        background-position: 50%;
+    }
+    .index-text-shadow{
+        text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+    }
+    .index-hero-text{
+        font-size: 550%;
+    }
+    .index-stats-text{
+        font-size: 350%;
+    }
+    .index-stats-text-num{
+        font-size: 500%;
+    }
+    .container-small {
+        width: 500px;
+    }
+    .container-large {
+        width: 1500px;
+    }
+}
+
+.container-small, .container-large {
+    max-width: 100%;
+}
