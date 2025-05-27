@@ -54,7 +54,7 @@ def set_temperature(request):
     data = json.loads(request.body)
     temperature = data.get('temperature')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    response = [call_api(endpoint, device, temperature) for device in devices]
+    response = [call_api(endpoint, device, temperature) for device in devices][0]
     if response:
         decoded = response.json()
         api_response = {
