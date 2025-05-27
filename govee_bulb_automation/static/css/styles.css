@@ -455,3 +455,22 @@ header {
 .container-small, .container-large {
     max-width: 100%;
 }
+
+
+
+  .temp-option {
+    flex: 1 0 100px;
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+    min-width: 90px;
+    color: #222;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .temp-option:hover {
+    transform: scale(1.1);
+  }
