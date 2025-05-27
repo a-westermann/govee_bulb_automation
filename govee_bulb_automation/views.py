@@ -48,10 +48,10 @@ def toggle_light(request):
         response = responses[0]
         decoded = response.json()
         api_response = {
-            'status_code': response.status_code,
-            'response': decoded
+            'status_code': decoded['code'],
+            'response': decoded['message']
         }
-        return JsonResponse({'success': True, 'response': api_response})
+        return JsonResponse({'success': api_response['code'] == 200, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
@@ -71,10 +71,10 @@ def set_temperature(request):
         response = responses[0]
         decoded = response.json()
         api_response = {
-            'status_code': response.status_code,
-            'response': decoded
+            'status_code': decoded['code'],
+            'response': decoded['message']
         }
-        return JsonResponse({'success': True, 'response': api_response})
+        return JsonResponse({'success': api_response['code'] == 200, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
@@ -95,10 +95,10 @@ def set_color(request):
         response = responses[0]
         decoded = response.json()
         api_response = {
-            'status_code': response.status_code,
-            'response': decoded
+            'status_code': decoded['code'],
+            'response': decoded['message']
         }
-        return JsonResponse({'success': True, 'response': api_response})
+        return JsonResponse({'success': api_response['code'] == 200, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
@@ -127,10 +127,10 @@ def set_brightness(request):
         response = responses[0]
         decoded = response.json()
         api_response = {
-            'status_code': response.status_code,
-            'response': decoded
+            'status_code': decoded['code'],
+            'response': decoded['message']
         }
-        return JsonResponse({'success': True, 'response': api_response})
+        return JsonResponse({'success': api_response['code'] == 200, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
@@ -151,10 +151,10 @@ def weather_sync(request):
         response = responses[0]
         decoded = response.json()
         api_response = {
-            'status_code': response.status_code,
-            'response': decoded
+            'status_code': decoded['code'],
+            'response': decoded['message']
         }
-        return JsonResponse({'success': True, 'response': api_response})
+        return JsonResponse({'success': api_response['code'] == 200, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
