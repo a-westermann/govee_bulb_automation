@@ -68,3 +68,20 @@ def set_temperature(request):
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
 
+@csrf_exempt
+def set_color(request):
+    devices = get_devices()
+    data = json.loads(request.body)
+    hex_color = data.get('color')  # Format: '#rrggbb'
+    rgb = hex_to_rgb(hex_color)
+    endpoint = 'https://developer-api.govee.com/v1/devices/control'
+    response = [call_api_put(endpoint, get_set_color, device, rgb) for device in devices]
+    return JsonResponse({'success': response.ok, 'response': response.json()})
+
+def hex_to_rgb(hex_color):
+    hex_color = hex_color.lstrip('#')
+    return {
+        "r": int(hex_color[0:2], 16),
+        "g": int(hex_color[2:4], 16),
+        "b": int(hex_color[4:6], 16),
+    }

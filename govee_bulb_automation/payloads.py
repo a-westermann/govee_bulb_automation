@@ -43,3 +43,14 @@ def get_set_temp(device_id, model, kelvin):
             "value": int(kelvin)
         }
     }
+
+def get_set_color(device_id, model, rgb):
+    payload = {
+        "device": device_id,
+        "model": model,
+        "cmd": {
+            "name": "color",
+            "value": rgb
+        }
+    }
+    return payload

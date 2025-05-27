@@ -27,7 +27,7 @@
 <!--</div>-->
 
 
-<div class="temp-grid">
+<div class="temp-grid" style="padding-top:100px">
   <div class="temp-option text-dark white-shadow" style="background-color: #FFB74D;" onclick="setTemperature(2700)">2700K</div>
   <div class="temp-option text-dark white-shadow" style="background-color: #FFD54F;" onclick="setTemperature(3000)">3000K</div>
   <div class="temp-option text-dark white-shadow" style="background-color: #FFF176;" onclick="setTemperature(3500)">3500K</div>
@@ -38,6 +38,9 @@
 </div>
 
 
+
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+<div id="colorWheel"></div>
 
 
 
@@ -104,4 +107,26 @@ function toggleLight(state) {
     .catch(err => alert("Error: " + err));
   }
 </script>
+
+<!-- Color chooser-->
+<script>
+  const colorPicker = new iro.ColorPicker("#colorWheel", {
+    width: 250,
+    color: "#ff9900",
+    layout: [
+      { component: iro.ui.Wheel },
+      { component: iro.ui.Slider, options: { sliderType: 'value' } },
+    ]
+  });
+
+  colorPicker.on('color:change', function(color) {
+    const rgb = color.rgb;
+    fetch('/set_color/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ color: `#${color.hexString.slice(1)}` })
+    });
+  });
+</script>
+
 </html>
