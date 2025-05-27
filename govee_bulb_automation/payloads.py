@@ -40,6 +40,6 @@ def get_set_temp(device_id, model, kelvin):
         "model": model,
         "cmd": {
             "name": "colorTem",
-            "value": kelvin
+            "value": int(kelvin)
         }
     }
