@@ -22,29 +22,47 @@ def bulb_home(request):
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
+def call_api(endpoint, device, val):
+    payload = get_toggle_light(device.device_id, device.model, val)
+    response = requests.put(endpoint, data=json.dumps(payload),
+                            headers={'Accept': 'application/json', 'Govee-API-Key': API_KEY,
+                                     'Content-Type': 'application/json'})
+    logger.log(level=10, msg=response.content)
+    return response
+
 @csrf_exempt
 def toggle_light(request):
     devices = get_devices()
     data = json.loads(request.body)
     state = data.get('state')
-    logger.log(level=10, msg=f'toggle light. Devices: {len(devices)}')
-    response = None
-
-    for device in devices:
-        payload = get_toggle_light(device.device_id, device.model, state)
-        endpoint = 'https://developer-api.govee.com/v1/devices/control'
-        response = requests.put(endpoint, data=json.dumps(payload),
-                                 headers={'Accept': 'application/json','Govee-API-Key': API_KEY,
-                                          'Content-Type': 'application/json'})
-        logger.log(level=10, msg=response.content)
+    endpoint = 'https://developer-api.govee.com/v1/devices/control'
+    response = [call_api(endpoint, device, state) for device in devices]
     if response:
         decoded = response.json()
-        toggle_light_response = {
+        api_response = {
             'status_code': response.status_code,
             'response': decoded
         }
-        return JsonResponse({'success': True, 'response': toggle_light_response})
+        return JsonResponse({'success': True, 'response': api_response})
     else:
-        toggle_light_response = {}
-        return JsonResponse({'success': False, 'response': toggle_light_response})
+        api_response = {}
+        return JsonResponse({'success': False, 'response': api_response})
+
+@csrf_exempt
+def set_temperature(request):
+    devices = get_devices()
+    data = json.loads(request.body)
+    temperature = data.get('temperature')
+    endpoint = 'https://developer-api.govee.com/v1/devices/control'
+    response = [call_api(endpoint, device, temperature) for device in devices]
+    if response:
+        decoded = response.json()
+        api_response = {
+            'status_code': response.status_code,
+            'response': decoded
+        }
+        return JsonResponse({'success': True, 'response': api_response})
+    else:
+        api_response = {}
+        return JsonResponse({'success': False, 'response': api_response})
 

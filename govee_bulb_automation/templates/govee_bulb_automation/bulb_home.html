@@ -1,5 +1,5 @@
-{% load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -24,6 +24,27 @@
 <!--    {{devices}}-->
 <!--</div>-->
 
+
+<div class="container mt-4">
+  <h5>Select Color Temperature</h5>
+  <div class="d-flex justify-content-between text-center border rounded py-2 px-3 bg-light">
+    <!-- Grid items -->
+    <div class="temp-option flex-fill" onclick="setTemperature(2700)">2700K</div>
+    <div class="temp-option flex-fill" onclick="setTemperature(3000)">3000K</div>
+    <div class="temp-option flex-fill" onclick="setTemperature(3500)">3500K</div>
+    <div class="temp-option flex-fill" onclick="setTemperature(4000)">4000K</div>
+    <div class="temp-option flex-fill" onclick="setTemperature(5000)">5000K</div>
+    <div class="temp-option flex-fill" onclick="setTemperature(6500)">6500K</div>
+  </div>
+</div>
+
+
+
+
+
+</body>
+
+<!-- Toggle light -->
 <script>
 function toggleLight(state) {
     fetch('/toggle_light/', {
@@ -43,6 +64,38 @@ function toggleLight(state) {
     });
 }
 </script>
-</body>
 
+
+<!-- Temperature selector -->
+<style>
+  .temp-option {
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.2s ease;
+    border-right: 1px solid #ccc;
+  }
+  .temp-option:last-child {
+    border-right: none;
+  }
+  .temp-option:hover {
+    background-color: #e3f2fd;
+  }
+</style>
+<script>
+  function setTemperature(kelvin) {
+    fetch('/set_temperature/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: JSON.stringify({ temperature: kelvin })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(`Temperature set to ${kelvin}K\n${JSON.stringify(data)}`);
+    })
+    .catch(err => alert("Error: " + err));
+  }
+</script>
 </html>

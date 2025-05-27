@@ -33,3 +33,13 @@ def get_toggle_light(device_id, model, value):
             "value": value
         }
     }
+
+def get_set_temp(device_id, model, kelvin):
+    return {
+        "device": device_id,
+        "model": model,
+        "cmd": {
+            "name": "colorTem",
+            "value": kelvin
+        }
+    }
