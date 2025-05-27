@@ -85,3 +85,12 @@ def hex_to_rgb(hex_color):
         "g": int(hex_color[2:4], 16),
         "b": int(hex_color[4:6], 16),
     }
+
+@csrf_exempt
+def set_brightness(request):
+    devices = get_devices()
+    data = json.loads(request.body)
+    brightness = data.get('brightness')  # 0-100
+    endpoint = 'https://developer-api.govee.com/v1/devices/control'
+    response = [call_api_put(endpoint, get_set_brightness, device, brightness) for device in devices]
+    return JsonResponse({'success': response.ok, 'response': response.json()})

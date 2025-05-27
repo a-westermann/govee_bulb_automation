@@ -54,3 +54,14 @@ def get_set_color(device_id, model, rgb):
         }
     }
     return payload
+
+def get_set_brightness(device_id, model, val):
+    payload = {
+        "device": device_id,
+        "model": model,
+        "cmd": {
+            "name": "brightness",
+            "value": val
+        }
+    }
+    return payload
