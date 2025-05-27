@@ -143,7 +143,7 @@ def weather_sync(request):
     global WEATHER_SYNC
     WEATHER_SYNC = True
     weather = get_weather()
-    color = get_color_from_condition(weather.get('main'), weather.get('description'))
+    color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
     rgb = hex_to_rgb(color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
     responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
