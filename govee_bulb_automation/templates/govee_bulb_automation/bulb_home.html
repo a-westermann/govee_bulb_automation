@@ -32,26 +32,23 @@
     <div class="card p-3 mb-4">
         <h5 class="mb-3">Set Brightness</h5>
         <div id="brightness-bar" class="w-100 rounded-pill"
-             style="height: 30px; background: linear-gradient(to right, #000, #fff); cursor: pointer; position: relative;">
+             style="height: 30px; background: linear-gradient(to right, #000000, #fff); cursor: pointer; position: relative;">
             <div id="brightness-indicator"
-                 style="position: absolute; top: 0; height: 100%; width: 2px; background: red;"></div>
+                 style="position: absolute; top: 0; height: 100%; width: 2px; background: yellow;"></div>
         </div>
     </div>
 
 
     <!-- Temperature Grid -->
     <div class="card shadow-sm p-4 mb-5">
-        <h5 class="mb-3 justify-content-center">Select Temperature</h5>
-        <div class="d-flex flex-wrap gap-2 justify-content-center">
-            <button class="btn temp-btn" style="background-color: #FFB74D;" onclick="setTemperature(2700)">2700K</button>
-            <button class="btn temp-btn" style="background-color: #FFD54F;" onclick="setTemperature(3000)">3000K</button>
-            <button class="btn temp-btn" style="background-color: #FFF176;" onclick="setTemperature(3500)">3500K</button>
-            <button class="btn temp-btn" style="background-color: #ffff89;" onclick="setTemperature(4000)">4000K</button>
-            <button class="btn temp-btn" style="background-color: #ffffa6;" onclick="setTemperature(5000)">5000K</button>
-            <button class="btn temp-btn" style="background-color: #ffffc8;" onclick="setTemperature(6000)">6000K</button>
-            <button class="btn temp-btn" style="background-color: #ffffff;" onclick="setTemperature(6500)">6500K</button>
+        <h5 class="mb-3">Select Temperature</h5>
+        <div id="temperature-bar" class="w-100 rounded-pill position-relative"
+             style="height: 30px; background: linear-gradient(to right, #FFB74D, #FFD54F, #FFF176, #ffffa4, #ffffa6, #ffffc8, #ffffff); cursor: pointer;">
+            <div id="temp-indicator"
+                 style="position: absolute; top: 0; height: 100%; width: 2px; background: black;"></div>
         </div>
     </div>
+
 
     <!-- Color Picker -->
     <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
@@ -86,48 +83,56 @@
 
 <!-- Brightness -->
 <script>
-const bar = document.getElementById('brightness-bar');
-const indicator = document.getElementById('brightness-indicator');
+    const bar = document.getElementById('brightness-bar');
+    const indicator = document.getElementById('brightness-indicator');
 
-bar.addEventListener('click', function (e) {
-    const rect = bar.getBoundingClientRect();
-    const x = e.clientX - rect.left; // Click position relative to bar
-    const percent = x / rect.width;
-    const brightness = Math.round(percent * 100); // value from 0 to 100
+    bar.addEventListener('click', function (e) {
+        const rect = bar.getBoundingClientRect();
+        const x = e.clientX - rect.left; // Click position relative to bar
+        const percent = x / rect.width;
+        const brightness = Math.round(percent * 100); // value from 0 to 100
 
-    // Move the indicator
-    indicator.style.left = `${percent * 100}%`;
+        // Move the indicator
+        indicator.style.left = `${percent * 100}%`;
 
-    // Send the value to the server
-    fetch('/set_brightness/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ brightness: brightness })
+        // Send the value to the server
+        fetch('/set_brightness/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ brightness: brightness })
+        });
+
+        console.log('Brightness set to', brightness);
     });
-
-    console.log('Brightness set to', brightness);
-});
 </script>
 
 <!-- Temperature selector -->
 <script>
-    function setTemperature(kelvin) {
+    const tempBar = document.getElementById('temperature-bar');
+    const tempIndicator = document.getElementById('temp-indicator');
+
+    const minTemp = 2700;
+    const maxTemp = 6500;
+
+    tempBar.addEventListener('click', function (e) {
+        const rect = tempBar.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percent = Math.min(Math.max(x / rect.width, 0), 1); // Clamp between 0 and 1
+        const temperature = Math.round(minTemp + (maxTemp - minTemp) * percent);
+
+        tempIndicator.style.left = `${percent * 100}%`;
+
+        // Send to server
         fetch('/set_temperature/', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // 'X-CSRFToken': '{{ csrf_token }}'
-            },
-            body: JSON.stringify({ temperature: kelvin })
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    alert(`${JSON.stringify(data.response, null, 2)}`);
-                }
-            })
-    }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ temperature: temperature })
+        });
+
+        console.log('Temperature set to', temperature + 'K');
+    });
 </script>
+
 
 <!-- Color chooser-->
 <script>
