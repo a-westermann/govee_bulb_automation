@@ -90,8 +90,18 @@ def set_color(request):
     hex_color = data.get('color')  # Format: '#rrggbb'
     rgb = hex_to_rgb(hex_color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    response = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
-    return JsonResponse({'success': response.ok, 'response': response.json()})
+    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
+    if responses:
+        response = responses[0]
+        decoded = response.json()
+        api_response = {
+            'status_code': response.status_code,
+            'response': decoded
+        }
+        return JsonResponse({'success': api_response.ok, 'response': api_response.json()})
+    else:
+        return JsonResponse({'success': False, 'response': ''})
+
 
 def hex_to_rgb(hex_color):
     hex_color = hex_color.lstrip('#')
@@ -111,8 +121,17 @@ def set_brightness(request):
     data = json.loads(request.body)
     brightness = data.get('brightness')  # 0-100
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    response = [call_api_put(endpoint, get_set_brightness, device, brightness) for device in DEVICES]
-    return JsonResponse({'success': response.ok, 'response': response.json()})
+    responses = [call_api_put(endpoint, get_set_brightness, device, brightness) for device in DEVICES]
+    if responses:
+        response = responses[0]
+        decoded = response.json()
+        api_response = {
+            'status_code': response.status_code,
+            'response': decoded
+        }
+        return JsonResponse({'success': api_response.ok, 'response': api_response.json()})
+    else:
+        return JsonResponse({'success': False, 'response': ''})
 
 @csrf_exempt
 def weather_sync(request):
@@ -126,4 +145,13 @@ def weather_sync(request):
     rgb = hex_to_rgb(color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
     response = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
-    return JsonResponse({'success': response.ok, 'response': response.json()})
+    if responses:
+        response = responses[0]
+        decoded = response.json()
+        api_response = {
+            'status_code': response.status_code,
+            'response': decoded
+        }
+        return JsonResponse({'success': api_response.ok, 'response': api_response.json()})
+    else:
+        return JsonResponse({'success': False, 'response': ''})
