@@ -25,17 +25,14 @@
 <!--</div>-->
 
 
-<div class="container mt-4">
-  <h5>Select Color Temperature</h5>
-  <div class="d-flex justify-content-between text-center border rounded py-2 px-3 bg-light">
-    <!-- Grid items -->
-    <div class="temp-option flex-fill" onclick="setTemperature(2700)">2700K</div>
-    <div class="temp-option flex-fill" onclick="setTemperature(3000)">3000K</div>
-    <div class="temp-option flex-fill" onclick="setTemperature(3500)">3500K</div>
-    <div class="temp-option flex-fill" onclick="setTemperature(4000)">4000K</div>
-    <div class="temp-option flex-fill" onclick="setTemperature(5000)">5000K</div>
-    <div class="temp-option flex-fill" onclick="setTemperature(6500)">6500K</div>
-  </div>
+<div class="temp-grid">
+  <div class="temp-option" style="background-color: #007BFF;" onclick="setTemperature(2700)">2700K</div>
+  <div class="temp-option" style="background-color: #3399FF;" onclick="setTemperature(3000)">3000K</div>
+  <div class="temp-option" style="background-color: #66CCFF;" onclick="setTemperature(3500)">3500K</div>
+  <div class="temp-option" style="background-color: #FFCC66;" onclick="setTemperature(4000)">4000K</div>
+  <div class="temp-option" style="background-color: #FF9966;" onclick="setTemperature(5000)">5000K</div>
+  <div class="temp-option" style="background-color: #FF6600;" onclick="setTemperature(6000)">6000K</div>
+  <div class="temp-option" style="background-color: #FFFFFF; color: #333;" onclick="setTemperature(6500)">6500K</div>
 </div>
 
 
@@ -68,17 +65,26 @@ function toggleLight(state) {
 
 <!-- Temperature selector -->
 <style>
+  .temp-grid {
+    display: flex;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
   .temp-option {
-    cursor: pointer;
+    flex: 1;
+    text-align: center;
     padding: 10px;
-    transition: background-color 0.2s ease;
-    border-right: 1px solid #ccc;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s ease;
   }
-  .temp-option:last-child {
-    border-right: none;
-  }
+
   .temp-option:hover {
-    background-color: #e3f2fd;
+    transform: scale(1.05);
   }
 </style>
 <script>

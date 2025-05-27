@@ -24,13 +24,13 @@ def get_adjust_brightness(device_id, model, value):
         }
     }
 
-def get_toggle_light(device_id, model, value):
+def get_toggle_light(device_id, model, state):
     return {
         "device": device_id,
         "model": model,
         "cmd": {
             "name": "turn",
-            "value": value
+            "value": state
         }
     }
 
