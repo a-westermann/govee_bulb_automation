@@ -93,6 +93,13 @@ header {
     color: white;
     font-weight: bold;
 }
+/* Restore original color immediately after click */
+.buttons:active {
+    background-color: coral;
+    color: white;
+    border-color: white;
+}
+
 .btn-yellow{
     background-color: #ffbb00;
     border-color: white;
