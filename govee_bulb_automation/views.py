@@ -98,9 +98,10 @@ def set_color(request):
             'status_code': response.status_code,
             'response': decoded
         }
-        return JsonResponse({'success': api_response.ok, 'response': api_response.json()})
+        return JsonResponse({'success': True, 'response': api_response})
     else:
-        return JsonResponse({'success': False, 'response': ''})
+        api_response = {}
+        return JsonResponse({'success': False, 'response': api_response})
 
 
 def hex_to_rgb(hex_color):
@@ -129,9 +130,10 @@ def set_brightness(request):
             'status_code': response.status_code,
             'response': decoded
         }
-        return JsonResponse({'success': api_response.ok, 'response': api_response.json()})
+        return JsonResponse({'success': True, 'response': api_response})
     else:
-        return JsonResponse({'success': False, 'response': ''})
+        api_response = {}
+        return JsonResponse({'success': False, 'response': api_response})
 
 @csrf_exempt
 def weather_sync(request):
@@ -144,7 +146,7 @@ def weather_sync(request):
     color = get_color_from_condition(weather.get('main'), weather.get('description'))
     rgb = hex_to_rgb(color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    response = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
+    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
     if responses:
         response = responses[0]
         decoded = response.json()
@@ -152,6 +154,7 @@ def weather_sync(request):
             'status_code': response.status_code,
             'response': decoded
         }
-        return JsonResponse({'success': api_response.ok, 'response': api_response.json()})
+        return JsonResponse({'success': True, 'response': api_response})
     else:
-        return JsonResponse({'success': False, 'response': ''})
+        api_response = {}
+        return JsonResponse({'success': False, 'response': api_response})
