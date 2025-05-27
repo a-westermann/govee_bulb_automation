@@ -36,8 +36,9 @@ def toggle_light(request):
     data = json.loads(request.body)
     state = data.get('state')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    response = [call_api_put(endpoint, device, state) for device in devices]
-    if response:
+    responses = [call_api_put(endpoint, device, state) for device in devices]
+    if responses:
+        response = responses[0]
         decoded = response.json()
         api_response = {
             'status_code': response.status_code,
