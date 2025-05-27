@@ -174,7 +174,13 @@
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ color: `#${color.hexString.slice(1)}` })
-        });
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (!data.success) {
+                    alert(`Error setting color ${JSON.stringify(data.response, null, 2)}`);
+                }
+            })
     });
 </script>
 
