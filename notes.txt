@@ -7,3 +7,13 @@ Toggle On/Off buttons
 Slider for brightness
 Temp chooser
 Color chooser ?
+
+
+Time of day sync
+Click to enable it. It sets the Temp and Brightness based on time of day
+
+
+Weather-sync
+Get weather type ("Cloudy") and time-of-day and set light Color+Brightness
+This can be a button on the site 'Weather Sync' that applies it
+The button should put the system into weather_sync mode, that automatically updates itself every minute
