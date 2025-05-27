@@ -22,8 +22,8 @@ def bulb_home(request):
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
-def call_api_put(endpoint, device, val):
-    payload = get_toggle_light(device.device_id, device.model, val)
+def call_api_put(endpoint, payload_func, device, val):
+    payload = payload_func(device.device_id, device.model, val)
     response = requests.put(endpoint, data=json.dumps(payload),
                             headers={'Accept': 'application/json', 'Govee-API-Key': API_KEY,
                                      'Content-Type': 'application/json'})
@@ -36,7 +36,7 @@ def toggle_light(request):
     data = json.loads(request.body)
     state = data.get('state')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, device, state) for device in devices]
+    responses = [call_api_put(endpoint, get_toggle_light, device, state) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
@@ -55,7 +55,7 @@ def set_temperature(request):
     data = json.loads(request.body)
     temperature = data.get('temperature')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, device, temperature) for device in devices]
+    responses = [call_api_put(endpoint, get_set_temp, device, temperature) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
