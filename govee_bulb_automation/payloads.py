@@ -65,3 +65,15 @@ def get_set_brightness(device_id, model, val):
         }
     }
     return payload
+
+# openweathermap
+def get_weather():
+    lat, lon = open('/home/ubuntu/lat_long').read().strip().split(' ')
+    api_key = open('/home/ubuntu/openweathermap_api_key').read().strip()
+    endpoint = f'https://api.openweathermap.org/data/3.0/onecall'
+    response = requests.get('https://developer-api.govee.com/v1/devices',
+                            headers={'Accept': 'application/json', 'appid': API_KEY,
+                                     'lat': lat, 'lon': lon})
+    weather = json.loads(response.content)
+    return weather
+

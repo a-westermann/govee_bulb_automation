@@ -18,7 +18,8 @@ logger = logging.getLogger('govee_bulb_automation')
 
 def bulb_home(request):
     devices = get_devices()
-    context = {'devices':devices}
+    context = {'devices':devices,
+               'weather': get_weather()}
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
