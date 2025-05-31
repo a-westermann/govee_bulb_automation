@@ -61,3 +61,37 @@ def calculate_light_temperature(sunrise_unix, sunset_unix, current_unix=None, mi
     else:
         # After sunset → night
         return min_temp
+
+
+def calculate_brightness(sunrise_unix, sunset_unix, current_unix = None):
+    """
+    Returns a brightness value (0–100 scale) based on time of day:
+    - Brightness is 5% at sunrise
+    - Ramps to 75% over 2 hours
+    - Stays at 75% through the day
+    - Starts ramping down 2 hours before sunset
+    - Reaches 5% at sunset
+    - Remains 5% throughout the night
+    """
+    MIN_BRIGHTNESS = 5
+    MAX_BRIGHTNESS = 75
+    TRANSITION_DURATION = 2 * 60 * 60  # 2 hours in seconds
+
+    current_unix = datetime.utcfromtimestamp(current_unix if current_unix else datetime.utcnow().timestamp())
+    if current_unix < sunrise_unix:
+        # Before sunrise (night)
+        return MIN_BRIGHTNESS
+    elif sunrise_unix <= current_unix <= sunrise_unix + TRANSITION_DURATION:
+        # Sunrise ramp-up
+        t = (current_unix - sunrise_unix) / TRANSITION_DURATION
+        return round(MIN_BRIGHTNESS + t * (MAX_BRIGHTNESS - MIN_BRIGHTNESS))
+    elif sunrise_unix + TRANSITION_DURATION < current_unix < sunset_unix - TRANSITION_DURATION:
+        # Daytime full brightness
+        return MAX_BRIGHTNESS
+    elif sunset_unix - TRANSITION_DURATION <= current_unix <= sunset_unix:
+        # Sunset ramp-down
+        t = (sunset_unix - current_unix) / TRANSITION_DURATION
+        return round(MIN_BRIGHTNESS + t * (MAX_BRIGHTNESS - MIN_BRIGHTNESS))
+    else:
+        # After sunset (night)
+        return MIN_BRIGHTNESS

@@ -8,7 +8,7 @@ import logging
 import requests
 from .models import Device
 from .payloads import *
-from .weather import get_color_from_condition, calculate_light_temperature
+from .weather import get_color_from_condition, calculate_light_temperature, calculate_brightness
 from time import sleep
 
 
@@ -95,9 +95,14 @@ def auto(request):
         sunrise = weather['sys']['sunrise']  # UNIX timestamp
         sunset = weather['sys']['sunset']  # UNIX timestamp
 
+        # Temperature
         temp = calculate_light_temperature(sunrise, sunset)
         payload = {"temperature": temp}
         response = requests.post(url='https://gobeyondthescreen.org/set_temperature/', data=json.dumps(payload))
+        # Brightness
+        brightness = calculate_brightness(sunrise, sunset)
+        payload = {'brightness': brightness}
+        response = requests.post(url='https://gobeyondthescreen.org/set_brightness/', data=json.dumps(payload))
         time.sleep(60000)
     # return JsonResponse({'success': False, 'response': response})
 
