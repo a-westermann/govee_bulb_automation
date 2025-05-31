@@ -95,9 +95,9 @@ header {
 }
 /* Restore original color immediately after click */
 .buttons:active {
-    background-color: coral;
-    color: white;
-    border-color: white;
+    background-color: coral !important;
+    border-color: white !important;
+    color: white !important;
 }
 
 .btn-yellow{
