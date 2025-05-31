@@ -99,6 +99,12 @@ header {
     border-color: white !important;
     color: white !important;
 }
+.buttons:focus {
+    background-color: coral !important;
+    border-color: white !important;
+    color: white !important;
+    box-shadow: none; /* Optional: removes blue outline in some browsers */
+}
 
 .btn-yellow{
     background-color: #ffbb00;
