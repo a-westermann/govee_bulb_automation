@@ -8,5 +8,5 @@ urlpatterns = [
     path('set_color/', set_color, name='set_color'),
     path('set_brightness/', set_brightness, name='set_brightness'),
     path('weather_sync/', weather_sync, name='weather_sync'),
-    path('auto/', auto, name ='auto'),
+    path('auto/', auto, name='auto'),
 ]
