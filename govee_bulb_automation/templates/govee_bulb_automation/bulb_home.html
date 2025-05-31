@@ -62,6 +62,9 @@
             <div id="colorWheel"></div>
         </div>
     </div>
+    <div class="mt-3">
+        <button class="btn btn-primary" onclick="applyColor()">Apply Color</button>
+    </div>
 </div>
 
 </body>
@@ -159,29 +162,36 @@
 
 <!-- Color chooser-->
 <script>
+    let selectedColor = "#ff9900"; // default fallback
+
     const colorPicker = new iro.ColorPicker("#colorWheel", {
         width: 250,
-        color: "#ff9900",
+        color: selectedColor,
         layout: [
             { component: iro.ui.Wheel },
             { component: iro.ui.Slider, options: { sliderType: 'value' } },
         ]
     });
 
+    // Only save it, don't send API request
     colorPicker.on('color:change', function(color) {
-        const rgb = color.rgb;
+        selectedColor = `#${color.hexString.slice(1)}`;
+    });
+
+    // Send it when user confirms
+    function applyColor() {
         fetch('/set_color/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ color: `#${color.hexString.slice(1)}` })
+            body: JSON.stringify({ color: selectedColor })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    alert(`Error setting color ${JSON.stringify(data.response, null, 2)}`);
-                }
-            })
-    });
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                alert(`Error setting color: ${JSON.stringify(data.response, null, 2)}`);
+            }
+        });
+    }
 </script>
 
 </html>
