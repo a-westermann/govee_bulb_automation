@@ -1,23 +1,21 @@
+import time
+
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
-from django.views.decorators.http import require_POST, require_GET
-from django.views import View
-from django.utils.decorators import method_decorator
 import json
-# from .models import Appointment, PushSubscription
 import logging
-from django.contrib.auth.decorators import login_required
-from django.db import models
 import requests
 from .models import Device
 from .payloads import *
 from .weather import get_color_from_condition, calculate_light_temperature
+from time import sleep
 
 
 logger = logging.getLogger('govee_bulb_automation')
 DEVICES = None
 WEATHER_SYNC = False
+AUTO_MODE = False
 
 def bulb_home(request):
     global DEVICES
@@ -37,6 +35,10 @@ def call_api_put(endpoint, payload_func, device, val):
 
 @csrf_exempt
 def toggle_light(request):
+    global WEATHER_SYNC
+    WEATHER_SYNC = False
+    global AUTO_MODE
+    AUTO_MODE = False
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
@@ -63,6 +65,8 @@ def set_temperature(request):
         DEVICES = get_devices()
     global WEATHER_SYNC
     WEATHER_SYNC = False
+    global AUTO_MODE
+    AUTO_MODE = False
     data = json.loads(request.body)
     temperature = data.get('temperature')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
@@ -82,14 +86,20 @@ def set_temperature(request):
 
 @csrf_exempt
 def auto(request):
-    weather = get_weather()
-    sunrise = weather['sys']['sunrise']  # UNIX timestamp
-    sunset = weather['sys']['sunset']  # UNIX timestamp
+    global WEATHER_SYNC
+    WEATHER_SYNC = False
+    global AUTO_MODE
+    AUTO_MODE = True
+    while AUTO_MODE:
+        weather = get_weather()
+        sunrise = weather['sys']['sunrise']  # UNIX timestamp
+        sunset = weather['sys']['sunset']  # UNIX timestamp
 
-    temp = calculate_light_temperature(sunrise, sunset)
-    payload = {"temperature": temp}
-    response = requests.post(url='https://gobeyondthescreen.org/set_temperature/', data=json.dumps(payload))
-    return JsonResponse({'success': False, 'response': response})
+        temp = calculate_light_temperature(sunrise, sunset)
+        payload = {"temperature": temp}
+        response = requests.post(url='https://gobeyondthescreen.org/set_temperature/', data=json.dumps(payload))
+        time.sleep(60000)
+    # return JsonResponse({'success': False, 'response': response})
 
 
 @csrf_exempt
@@ -99,6 +109,8 @@ def set_color(request):
         DEVICES = get_devices()
     global WEATHER_SYNC
     WEATHER_SYNC = False
+    global AUTO_MODE
+    AUTO_MODE = False
     data = json.loads(request.body)
     hex_color = data.get('color')  # Format: '#rrggbb'
     rgb = hex_to_rgb(hex_color)
@@ -132,6 +144,8 @@ def set_brightness(request):
         DEVICES = get_devices()
     global WEATHER_SYNC
     WEATHER_SYNC = False
+    global AUTO_MODE
+    AUTO_MODE = False
     data = json.loads(request.body)
     brightness = data.get('brightness')  # 0-100
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
@@ -153,21 +167,25 @@ def weather_sync(request):
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
+    global AUTO_MODE
+    AUTO_MODE = False
     global WEATHER_SYNC
     WEATHER_SYNC = True
-    weather = get_weather()
-    color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
-    rgb = hex_to_rgb(color)
-    endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
-    if responses:
-        response = responses[0]
-        decoded = response.json()
-        api_response = {
-            'status_code': decoded['code'],
-            'response': decoded['message']
-        }
-        return JsonResponse({'success': api_response['status_code'] == 200, 'response': api_response})
-    else:
-        api_response = {}
-        return JsonResponse({'success': False, 'response': api_response})
+    while WEATHER_SYNC:
+        weather = get_weather()
+        color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
+        rgb = hex_to_rgb(color)
+        endpoint = 'https://developer-api.govee.com/v1/devices/control'
+        responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
+        sleep(60000)
+    # if responses:
+    #     response = responses[0]
+    #     decoded = response.json()
+    #     api_response = {
+    #         'status_code': decoded['code'],
+    #         'response': decoded['message']
+    #     }
+    #     return JsonResponse({'success': api_response['status_code'] == 200, 'response': api_response})
+    # else:
+    #     api_response = {}
+    #     return JsonResponse({'success': False, 'response': api_response})
