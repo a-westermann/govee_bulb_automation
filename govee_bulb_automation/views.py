@@ -83,8 +83,8 @@ def set_temperature(request):
 @csrf_exempt
 def auto(request):
     weather = get_weather()
-    sunrise = weather['sys']['sunrise']  # UNIX timestamp
-    sunset = weather['sys']['sunset']  # UNIX timestamp
+    sunrise = weather['current']['sunrise']  # UNIX timestamp
+    sunset = weather['current']['sunset']  # UNIX timestamp
 
     temp = calculate_light_temperature(sunrise, sunset)
     payload = {"temperature": temp}
