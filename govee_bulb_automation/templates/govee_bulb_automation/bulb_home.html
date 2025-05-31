@@ -28,7 +28,10 @@
             <button type="button" class="btn btn-danger btn-lg px-5" onclick="toggleLight('off')">Turn Off</button>
         </div>
         <div class="col-auto">
-            <button type="button" class="buttons btn-lg px-5" onclick="weatherSync()">Weather Sync</button>
+            <button type="button" class="btn buttons btn-lg px-5" onclick="weatherSync()">Weather Sync</button>
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn buttons btn-lg px-5" onclick="auto()">Auto</button>
         </div>
     </div>
 
@@ -105,6 +108,24 @@
                 }
             });
     }
+</script>
+
+<script>
+    function auto(){
+        fetch('/auto/',{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => respones.json())
+            .then(data => {
+                if (!data.success){
+                    alert('Error turning on Auto mode ${JSON.stringify(data.response, null, 2)}');
+                }
+            });
+    }
+
 </script>
 
 <!-- Brightness -->

@@ -12,7 +12,7 @@ from django.db import models
 import requests
 from .models import Device
 from .payloads import *
-from .weather import get_color_from_condition
+from .weather import get_color_from_condition, calculate_light_temperature
 
 
 logger = logging.getLogger('govee_bulb_automation')
@@ -78,6 +78,17 @@ def set_temperature(request):
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
+
+@csrf_exempt
+def auto(request):
+    weather = get_weather()
+    sunrise = weather['sys']['sunrise']  # UNIX timestamp
+    sunset = weather['sys']['sunset']  # UNIX timestamp
+
+    temp = calculate_light_temperature(sunrise, sunset)
+    payload = {"temperature": temp}
+    requests.post(url='https://gobeyondthescreen/set_temperature/', data=json.dumps(payload))
+
 
 @csrf_exempt
 def set_color(request):
