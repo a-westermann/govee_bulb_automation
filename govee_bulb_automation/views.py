@@ -10,6 +10,7 @@ from .models import Device
 from .payloads import *
 from .weather import get_color_from_condition, calculate_light_temperature, calculate_brightness
 from time import sleep
+from datetime import datetime
 
 
 logger = logging.getLogger('govee_bulb_automation')
@@ -86,30 +87,41 @@ def set_temperature(request):
 
 def auto_loop():
     global AUTO_MODE
+    AUTO_MODE = True
+    logger.debug("Auto mode started")
+
     while AUTO_MODE:
         try:
             weather = get_weather()
-            sunrise = weather['sys']['sunrise']
-            sunset = weather['sys']['sunset']
+            sunrise_unix = weather['sys']['sunrise']
+            sunset_unix = weather['sys']['sunset']
 
-            temp = calculate_light_temperature(sunrise, sunset)
-            brightness = calculate_brightness(sunrise, sunset)
+            sunrise_dt = datetime.utcfromtimestamp(sunrise_unix)
+            sunset_dt = datetime.utcfromtimestamp(sunset_unix)
+            current_dt = datetime.utcnow()
 
-            requests.post(
+            temp = calculate_light_temperature(sunrise_dt, sunset_dt, current_dt)
+            brightness = calculate_brightness(sunrise_dt, sunset_dt, current_dt)
+
+            temp_payload = {"temperature": temp}
+            temp_response = requests.post(
                 url='https://gobeyondthescreen.org/set_temperature/',
-                data=json.dumps({'temperature': temp}),
+                data=json.dumps(temp_payload),
                 headers={'Content-Type': 'application/json'}
             )
 
-            requests.post(
+            brightness_payload = {"brightness": brightness}
+            brightness_response = requests.post(
                 url='https://gobeyondthescreen.org/set_brightness/',
-                data=json.dumps({'brightness': brightness}),
+                data=json.dumps(brightness_payload),
                 headers={'Content-Type': 'application/json'}
             )
-            logger.debug("auto success")
-            time.sleep(60)
         except Exception as e:
-            logger.debug(f"Failed auto. {e}")
+            logger.error(f"Error in auto_worker: {e}")
+
+        time.sleep(60)
+
+    logger.debug("Auto mode stopped")
 
 
 
