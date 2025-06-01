@@ -106,6 +106,7 @@ def auto_loop():
                 data=json.dumps({'brightness': brightness}),
                 headers={'Content-Type': 'application/json'}
             )
+            print("auto success")
             time.sleep(60)
         except Exception as e:
             print(f"Failed auto. {e}")
