@@ -87,25 +87,29 @@ def set_temperature(request):
 def auto_loop():
     global AUTO_MODE
     while AUTO_MODE:
-        weather = get_weather()
-        sunrise = weather['sys']['sunrise']
-        sunset = weather['sys']['sunset']
+        try:
+            weather = get_weather()
+            sunrise = weather['sys']['sunrise']
+            sunset = weather['sys']['sunset']
 
-        temp = calculate_light_temperature(sunrise, sunset)
-        brightness = calculate_brightness(sunrise, sunset)
+            temp = calculate_light_temperature(sunrise, sunset)
+            brightness = calculate_brightness(sunrise, sunset)
 
-        requests.post(
-            url='https://gobeyondthescreen.org/set_temperature/',
-            data=json.dumps({'temperature': temp}),
-            headers={'Content-Type': 'application/json'}
-        )
+            requests.post(
+                url='https://gobeyondthescreen.org/set_temperature/',
+                data=json.dumps({'temperature': temp}),
+                headers={'Content-Type': 'application/json'}
+            )
 
-        requests.post(
-            url='https://gobeyondthescreen.org/set_brightness/',
-            data=json.dumps({'brightness': brightness}),
-            headers={'Content-Type': 'application/json'}
-        )
-        time.sleep(60)
+            requests.post(
+                url='https://gobeyondthescreen.org/set_brightness/',
+                data=json.dumps({'brightness': brightness}),
+                headers={'Content-Type': 'application/json'}
+            )
+            time.sleep(60)
+        except Exception as e:
+            print(f"Failed auto. {e}")
+
 
 
 @csrf_exempt
