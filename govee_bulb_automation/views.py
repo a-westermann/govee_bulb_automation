@@ -1,5 +1,5 @@
 import time
-
+import threading
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
@@ -84,27 +84,36 @@ def set_temperature(request):
         return JsonResponse({'success': False, 'response': api_response})
 
 
-@csrf_exempt
-def auto(request):
-    global WEATHER_SYNC
-    WEATHER_SYNC = False
+def auto_loop():
     global AUTO_MODE
-    AUTO_MODE = True
     while AUTO_MODE:
         weather = get_weather()
-        sunrise = weather['sys']['sunrise']  # UNIX timestamp
-        sunset = weather['sys']['sunset']  # UNIX timestamp
+        sunrise = weather['sys']['sunrise']
+        sunset = weather['sys']['sunset']
 
-        # Temperature
         temp = calculate_light_temperature(sunrise, sunset)
-        payload = {"temperature": temp}
-        response = requests.post(url='https://gobeyondthescreen.org/set_temperature/', data=json.dumps(payload))
-        # Brightness
         brightness = calculate_brightness(sunrise, sunset)
-        payload = {'brightness': brightness}
-        response = requests.post(url='https://gobeyondthescreen.org/set_brightness/', data=json.dumps(payload))
-        time.sleep(60000)
-    # return JsonResponse({'success': False, 'response': response})
+
+        requests.post(
+            url='https://gobeyondthescreen.org/set_temperature/',
+            data=json.dumps({'temperature': temp}),
+            headers={'Content-Type': 'application/json'}
+        )
+
+        requests.post(
+            url='https://gobeyondthescreen.org/set_brightness/',
+            data=json.dumps({'brightness': brightness}),
+            headers={'Content-Type': 'application/json'}
+        )
+        time.sleep(60)
+
+
+@csrf_exempt
+def auto(request):
+    global AUTO_MODE
+    AUTO_MODE = True
+    threading.Thread(target=auto_loop, daemon=True).start()
+    return JsonResponse({'success': True, 'message': 'Auto mode started'})
 
 
 @csrf_exempt
