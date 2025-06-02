@@ -91,7 +91,7 @@ def set_temperature(request):
 
 
 def set_auto(value: bool):
-    with open('/home/ubuntu/govee_auto.txt', 'w') as file:
+    with open('/var/tmp/govee_auto.txt', 'w') as file:
         file.write(str(value))
 
 
