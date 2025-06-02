@@ -91,7 +91,8 @@ def set_temperature(request):
 
 
 def set_auto(value: bool):
-    open('/home/ubuntu/govee_auto.txt').write(str(value))
+    with open('/home/ubuntu/govee_auto.txt', 'w') as file:
+        file.write(str(value))
 
 
 def auto_process():
@@ -135,7 +136,8 @@ def auto_process():
 @csrf_exempt
 def auto(request):
     global AUTO_MODE
-    threading.Thread(target=auto_process(), daemon=True).start()
+    # threading.Thread(target=auto_process(), daemon=True).start()
+    auto_process()
     return JsonResponse({'success': True, 'message': 'Auto mode started'})
 
 
