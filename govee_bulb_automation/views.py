@@ -39,7 +39,9 @@ def toggle_light(request):
     global WEATHER_SYNC
     WEATHER_SYNC = False
     global AUTO_MODE
-    AUTO_MODE = False
+    if AUTO_MODE:
+        set_auto(False)
+        AUTO_MODE = False
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
@@ -67,7 +69,10 @@ def set_temperature(request):
     global WEATHER_SYNC
     WEATHER_SYNC = False
     global AUTO_MODE
-    AUTO_MODE = False
+    if AUTO_MODE:
+        set_auto(False)
+        AUTO_MODE = False
+
     data = json.loads(request.body)
     temperature = data.get('temperature')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
@@ -85,51 +90,52 @@ def set_temperature(request):
         return JsonResponse({'success': False, 'response': api_response})
 
 
-def auto_loop():
+def set_auto(value: bool):
+    open('/home/ubuntu/govee_auto.txt').write(str(value))
+
+
+def auto_process():
     global AUTO_MODE
     AUTO_MODE = True
     logger.debug("Auto mode started")
+    set_auto(True)
+    # while AUTO_MODE:
+    try:
+        weather = get_weather()
+        sunrise_unix = weather['sys']['sunrise']
+        sunset_unix = weather['sys']['sunset']
 
-    while AUTO_MODE:
-        try:
-            weather = get_weather()
-            sunrise_unix = weather['sys']['sunrise']
-            sunset_unix = weather['sys']['sunset']
+        sunrise_dt = datetime.utcfromtimestamp(sunrise_unix)
+        sunset_dt = datetime.utcfromtimestamp(sunset_unix)
+        current_dt = datetime.utcnow()
 
-            sunrise_dt = datetime.utcfromtimestamp(sunrise_unix)
-            sunset_dt = datetime.utcfromtimestamp(sunset_unix)
-            current_dt = datetime.utcnow()
+        temp = calculate_light_temperature(sunrise_dt, sunset_dt, current_dt)
+        brightness = calculate_brightness(sunrise_dt, sunset_dt, current_dt)
 
-            temp = calculate_light_temperature(sunrise_dt, sunset_dt, current_dt)
-            brightness = calculate_brightness(sunrise_dt, sunset_dt, current_dt)
+        temp_payload = {"temperature": temp}
+        temp_response = requests.post(
+            url='https://gobeyondthescreen.org/set_temperature/',
+            data=json.dumps(temp_payload),
+            headers={'Content-Type': 'application/json'}
+        )
 
-            temp_payload = {"temperature": temp}
-            temp_response = requests.post(
-                url='https://gobeyondthescreen.org/set_temperature/',
-                data=json.dumps(temp_payload),
-                headers={'Content-Type': 'application/json'}
-            )
+        brightness_payload = {"brightness": brightness}
+        brightness_response = requests.post(
+            url='https://gobeyondthescreen.org/set_brightness/',
+            data=json.dumps(brightness_payload),
+            headers={'Content-Type': 'application/json'}
+        )
+    except Exception as e:
+        logger.error(f"Error in auto_worker: {e}")
 
-            brightness_payload = {"brightness": brightness}
-            brightness_response = requests.post(
-                url='https://gobeyondthescreen.org/set_brightness/',
-                data=json.dumps(brightness_payload),
-                headers={'Content-Type': 'application/json'}
-            )
-        except Exception as e:
-            logger.error(f"Error in auto_worker: {e}")
-
-        time.sleep(60)
-
-    logger.debug("Auto mode stopped")
+        # time.sleep(60)
 
 
 
 @csrf_exempt
 def auto(request):
     global AUTO_MODE
-    AUTO_MODE = True
-    threading.Thread(target=auto_loop, daemon=True).start()
+    threading.Thread(target=auto_process(), daemon=True).start()
     return JsonResponse({'success': True, 'message': 'Auto mode started'})
 
 
@@ -141,7 +147,9 @@ def set_color(request):
     global WEATHER_SYNC
     WEATHER_SYNC = False
     global AUTO_MODE
-    AUTO_MODE = False
+    if AUTO_MODE:
+        set_auto(False)
+        AUTO_MODE = False
     data = json.loads(request.body)
     hex_color = data.get('color')  # Format: '#rrggbb'
     rgb = hex_to_rgb(hex_color)
@@ -176,7 +184,9 @@ def set_brightness(request):
     global WEATHER_SYNC
     WEATHER_SYNC = False
     global AUTO_MODE
-    AUTO_MODE = False
+    if AUTO_MODE:
+        set_auto(False)
+        AUTO_MODE = False
     data = json.loads(request.body)
     brightness = data.get('brightness')  # 0-100
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
@@ -199,7 +209,9 @@ def weather_sync(request):
     if not DEVICES:
         DEVICES = get_devices()
     global AUTO_MODE
-    AUTO_MODE = False
+    if AUTO_MODE:
+        set_auto(False)
+        AUTO_MODE = False
     global WEATHER_SYNC
     WEATHER_SYNC = True
     while WEATHER_SYNC:
