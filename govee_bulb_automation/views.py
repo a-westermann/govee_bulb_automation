@@ -171,7 +171,7 @@ def set_color(request):
 
 
 def hex_to_rgb(hex_color):
-    hex_color = hex_color.strip('#')
+    hex_color = hex_color.lstrip('#')
     return {
         "r": int(hex_color[0:2], 16),
         "g": int(hex_color[2:4], 16),

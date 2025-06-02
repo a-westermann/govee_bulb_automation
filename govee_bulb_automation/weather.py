@@ -17,6 +17,8 @@ def get_color_from_condition(condition_main, condition_desc):
         return '#6993ff'
     elif condition_main == 'thunderstorm':
         return '#6e11fa'
+    else:
+        return '#fffeeb'
 
 
 def calculate_light_temperature(sunrise_dt, sunset_dt, current_dt=None, min_temp=2700, max_temp=6500):
