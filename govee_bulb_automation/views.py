@@ -86,12 +86,11 @@ def set_temperature(request):
 def set_auto(value: bool):
     with open('/var/tmp/govee_auto.txt', 'w') as file:
         file.write(str(value))
+        file.close()
 
 
 def auto_process():
     logger.debug("Auto mode started - auto_process")
-    set_auto(True)
-    logger.debug("Set auto done")
     # while AUTO_MODE:
     try:
         weather = get_weather()
@@ -118,6 +117,7 @@ def auto_process():
             data=json.dumps(brightness_payload),
             headers={'Content-Type': 'application/json'}
         )
+        set_auto(True)  # Set auto = True after the other methods!
     except Exception as e:
         logger.error(f"Error in auto_worker: {e}")
 
