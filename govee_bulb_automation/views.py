@@ -16,7 +16,6 @@ from datetime import datetime
 logger = logging.getLogger('govee_bulb_automation')
 DEVICES = None
 WEATHER_SYNC = False
-AUTO_MODE = False
 
 def bulb_home(request):
     global DEVICES
@@ -38,10 +37,7 @@ def call_api_put(endpoint, payload_func, device, val):
 def toggle_light(request):
     global WEATHER_SYNC
     WEATHER_SYNC = False
-    global AUTO_MODE
-    if AUTO_MODE:
-        set_auto(False)
-        AUTO_MODE = False
+    set_auto(False)
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
@@ -68,10 +64,7 @@ def set_temperature(request):
         DEVICES = get_devices()
     global WEATHER_SYNC
     WEATHER_SYNC = False
-    global AUTO_MODE
-    if AUTO_MODE:
-        set_auto(False)
-        AUTO_MODE = False
+    set_auto(False)
 
     data = json.loads(request.body)
     temperature = data.get('temperature')
@@ -96,8 +89,6 @@ def set_auto(value: bool):
 
 
 def auto_process():
-    global AUTO_MODE
-    AUTO_MODE = True
     logger.debug("Auto mode started")
     set_auto(True)
     # while AUTO_MODE:
@@ -135,7 +126,6 @@ def auto_process():
 
 @csrf_exempt
 def auto(request):
-    global AUTO_MODE
     # threading.Thread(target=auto_process(), daemon=True).start()
     auto_process()
     return JsonResponse({'success': True, 'message': 'Auto mode started'})
@@ -148,10 +138,7 @@ def set_color(request):
         DEVICES = get_devices()
     global WEATHER_SYNC
     WEATHER_SYNC = False
-    global AUTO_MODE
-    if AUTO_MODE:
-        set_auto(False)
-        AUTO_MODE = False
+    set_auto(False)
     data = json.loads(request.body)
     hex_color = data.get('color')  # Format: '#rrggbb'
     rgb = hex_to_rgb(hex_color)
@@ -185,10 +172,7 @@ def set_brightness(request):
         DEVICES = get_devices()
     global WEATHER_SYNC
     WEATHER_SYNC = False
-    global AUTO_MODE
-    if AUTO_MODE:
-        set_auto(False)
-        AUTO_MODE = False
+    set_auto(False)
     data = json.loads(request.body)
     brightness = data.get('brightness')  # 0-100
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
@@ -210,10 +194,7 @@ def weather_sync(request):
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
-    global AUTO_MODE
-    if AUTO_MODE:
-        set_auto(False)
-        AUTO_MODE = False
+    set_auto(False)
     global WEATHER_SYNC
     WEATHER_SYNC = True
     # while WEATHER_SYNC:
