@@ -89,8 +89,9 @@ def set_auto(value: bool):
 
 
 def auto_process():
-    logger.debug("Auto mode started")
+    logger.debug("Auto mode started - auto_process")
     set_auto(True)
+    logger.debug("Set auto done")
     # while AUTO_MODE:
     try:
         weather = get_weather()
