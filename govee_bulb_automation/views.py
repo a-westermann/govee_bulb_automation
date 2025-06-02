@@ -216,21 +216,22 @@ def weather_sync(request):
         AUTO_MODE = False
     global WEATHER_SYNC
     WEATHER_SYNC = True
-    while WEATHER_SYNC:
-        weather = get_weather()
-        color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
-        rgb = hex_to_rgb(color)
-        endpoint = 'https://developer-api.govee.com/v1/devices/control'
-        responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
-        sleep(60000)
-    # if responses:
-    #     response = responses[0]
-    #     decoded = response.json()
-    #     api_response = {
-    #         'status_code': decoded['code'],
-    #         'response': decoded['message']
-    #     }
-    #     return JsonResponse({'success': api_response['status_code'] == 200, 'response': api_response})
-    # else:
-    #     api_response = {}
-    #     return JsonResponse({'success': False, 'response': api_response})
+    # while WEATHER_SYNC:
+    weather = get_weather()
+    color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
+    rgb = hex_to_rgb(color)
+    endpoint = 'https://developer-api.govee.com/v1/devices/control'
+    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
+    # sleep(60000)
+
+    if responses:
+        response = responses[0]
+        decoded = response.json()
+        api_response = {
+            'status_code': decoded['code'],
+            'response': decoded['message']
+        }
+        return JsonResponse({'success': api_response['status_code'] == 200, 'response': api_response})
+    else:
+        api_response = {}
+        return JsonResponse({'success': False, 'response': api_response})
