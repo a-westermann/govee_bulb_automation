@@ -1,7 +1,7 @@
 import time
 import threading
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 import json
 import logging
@@ -18,10 +18,19 @@ DEVICES = None
 WEATHER_SYNC = False
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 
+def require_authenticated_session(view_func):
+    def wrapper(request, *args, **kwargs):
+        if not request.session.get('authenticated'):
+            return HttpResponseForbidden("Unauthorized")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
 def bulb_home(request):
     token = request.GET.get("token")
     if token != SECRET_TOKEN:
         return JsonResponse({'success': False, 'message': 'Forbidden'}, status=403)
+    else:
+        request.session['authenticated'] = True
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
@@ -38,6 +47,7 @@ def call_api_put(endpoint, payload_func, device, val):
     return response
 
 @csrf_exempt
+@require_authenticated_session
 def toggle_light(request):
     global WEATHER_SYNC
     WEATHER_SYNC = False
@@ -62,6 +72,7 @@ def toggle_light(request):
         return JsonResponse({'success': False, 'response': api_response})
 
 @csrf_exempt
+@require_authenticated_session
 def set_temperature(request):
     global DEVICES
     if not DEVICES:
@@ -130,6 +141,7 @@ def auto_process():
 
 
 @csrf_exempt
+@require_authenticated_session
 def auto(request):
     # threading.Thread(target=auto_process(), daemon=True).start()
     auto_process()
@@ -137,6 +149,7 @@ def auto(request):
 
 
 @csrf_exempt
+@require_authenticated_session
 def set_color(request):
     global DEVICES
     if not DEVICES:
@@ -171,6 +184,7 @@ def hex_to_rgb(hex_color):
     }
 
 @csrf_exempt
+@require_authenticated_session
 def set_brightness(request):
     global DEVICES
     if not DEVICES:
@@ -195,6 +209,7 @@ def set_brightness(request):
         return JsonResponse({'success': False, 'response': api_response})
 
 @csrf_exempt
+@require_authenticated_session
 def weather_sync(request):
     global DEVICES
     if not DEVICES:
