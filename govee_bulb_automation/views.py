@@ -21,13 +21,6 @@ WEATHER_SYNC = False
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 
 
-def get_client_ip(request):
-    # Handles proxies
-    x_forwarded = request.META.get("HTTP_X_FORWARDED_FOR")
-    if x_forwarded:
-        return x_forwarded.split(",")[0]
-    return request.META.get("REMOTE_ADDR")
-
 def require_authenticated_session(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.session.get('authenticated'):
