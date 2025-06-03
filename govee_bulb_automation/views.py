@@ -4,6 +4,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 import json
+from django.core.cache import cache
+from django.http import HttpResponseForbidden
 import logging
 import requests
 from .models import Device
@@ -18,10 +20,31 @@ DEVICES = None
 WEATHER_SYNC = False
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 
+
+def get_client_ip(request):
+    # Handles proxies
+    x_forwarded = request.META.get("HTTP_X_FORWARDED_FOR")
+    if x_forwarded:
+        return x_forwarded.split(",")[0]
+    return request.META.get("REMOTE_ADDR")
+
+
+def require_authorized_ip(view_func):
+    def wrapper(request, *args, **kwargs):
+        client_ip = get_client_ip(request)
+        if not cache.get(f"auth_ip:{client_ip}"):
+            return HttpResponseForbidden("Unauthorized")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
 def bulb_home(request):
     token = request.GET.get("token")
     if token != SECRET_TOKEN:
         return JsonResponse({'success': False, 'message': 'Forbidden'}, status=403)
+    else:
+        client_ip = get_client_ip(request)
+        cache.set(f"auth_ip:{client_ip}", True, timeout=3600)  # 1 hour
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
@@ -29,6 +52,8 @@ def bulb_home(request):
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
+
+@require_authorized_ip
 def call_api_put(endpoint, payload_func, device, val):
     payload = payload_func(device.device_id, device.model, val)
     response = requests.put(endpoint, data=json.dumps(payload),
@@ -37,6 +62,7 @@ def call_api_put(endpoint, payload_func, device, val):
     logger.log(level=10, msg=response.content)
     return response
 
+@require_authorized_ip
 @csrf_exempt
 def toggle_light(request):
     global WEATHER_SYNC
@@ -61,6 +87,7 @@ def toggle_light(request):
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
 
+@require_authorized_ip
 @csrf_exempt
 def set_temperature(request):
     global DEVICES
@@ -128,7 +155,7 @@ def auto_process():
         # time.sleep(60)
 
 
-
+@require_authorized_ip
 @csrf_exempt
 def auto(request):
     # threading.Thread(target=auto_process(), daemon=True).start()
@@ -136,6 +163,7 @@ def auto(request):
     return JsonResponse({'success': True, 'message': 'Auto mode started'})
 
 
+@require_authorized_ip
 @csrf_exempt
 def set_color(request):
     global DEVICES
@@ -170,6 +198,7 @@ def hex_to_rgb(hex_color):
         "b": int(hex_color[4:6], 16),
     }
 
+@require_authorized_ip
 @csrf_exempt
 def set_brightness(request):
     global DEVICES
@@ -194,6 +223,7 @@ def set_brightness(request):
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
 
+@require_authorized_ip
 @csrf_exempt
 def weather_sync(request):
     global DEVICES
