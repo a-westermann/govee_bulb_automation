@@ -21,26 +21,19 @@ WEATHER_SYNC = False
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 
 
-def get_client_ip(request):
-    # Check common headers for real IP
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        # Might be a list of proxies
-        ip = x_forwarded_for.split(',')[0].strip()
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    return ip
-
-
 def require_authenticated_session(view_func):
     def wrapper(request, *args, **kwargs):
-        ip = get_client_ip(request)
-        if ip in ['127.0.0.1', '::1']:
+        token = request.headers.get("X-Auth-Token")
+
+        # Allow if session is authenticated
+        if request.session.get('authenticated'):
             return view_func(request, *args, **kwargs)
 
-        if not request.session.get('authenticated'):
-            return HttpResponseForbidden("Unauthorized")
-        return view_func(request, *args, **kwargs)
+        # Allow if token matches
+        if token and token == SECRET_TOKEN:
+            return view_func(request, *args, **kwargs)
+
+        return HttpResponseForbidden("Unauthorized")
     return wrapper
 
 
@@ -146,14 +139,17 @@ def auto_process():
         temp_response = requests.post(
             url='https://gobeyondthescreen.org/set_temperature/',
             data=json.dumps(temp_payload),
-            headers={'Content-Type': 'application/json'}
+            headers={'Content-Type': 'application/json',
+                     'X-Auth-Token': SECRET_TOKEN,
+                     }
         )
 
         brightness_payload = {"brightness": brightness}
         brightness_response = requests.post(
             url='https://gobeyondthescreen.org/set_brightness/',
             data=json.dumps(brightness_payload),
-            headers={'Content-Type': 'application/json'}
+            headers={'Content-Type': 'application/json',
+                     'X-Auth-Token': SECRET_TOKEN,}
         )
         set_auto(True)  # Set auto = True after the other methods!
     except Exception as e:
