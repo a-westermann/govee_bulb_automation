@@ -23,14 +23,19 @@ SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 
 def require_authenticated_session(view_func):
     def wrapper(request, *args, **kwargs):
-        token = request.headers.get("X-Auth-Token")
+        header_token = request.headers.get("X-Auth-Token")
 
         # Allow if session is authenticated
         if request.session.get('authenticated'):
             return view_func(request, *args, **kwargs)
 
         # Allow if token matches
-        if token and token == SECRET_TOKEN:
+        if header_token and header_token == SECRET_TOKEN:
+            return view_func(request, *args, **kwargs)
+
+        # Check token as param (.sh script on server)
+        token = request.GET.get("token")
+        if token == SECRET_TOKEN:
             return view_func(request, *args, **kwargs)
 
         return HttpResponseForbidden("Unauthorized")
