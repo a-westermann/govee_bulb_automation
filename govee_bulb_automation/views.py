@@ -35,7 +35,7 @@ def require_authenticated_session(view_func):
 
         # Check token as param (.sh script on server)
         token = request.GET.get("token")
-        if token == SECRET_TOKEN:
+        if token and token == SECRET_TOKEN:
             return view_func(request, *args, **kwargs)
 
         return HttpResponseForbidden("Unauthorized")
