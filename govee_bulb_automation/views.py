@@ -16,8 +16,12 @@ from datetime import datetime
 logger = logging.getLogger('govee_bulb_automation')
 DEVICES = None
 WEATHER_SYNC = False
+SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 
 def bulb_home(request):
+    token = request.GET.get("token")
+    if token != SECRET_TOKEN:
+        return JsonResponse({'success': False, 'message': 'Forbidden'}, status=403)
     global DEVICES
     if not DEVICES:
         DEVICES = get_devices()
