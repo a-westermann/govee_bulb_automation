@@ -53,7 +53,6 @@ def bulb_home(request):
                   context=context)
 
 
-@require_authorized_ip
 def call_api_put(endpoint, payload_func, device, val):
     payload = payload_func(device.device_id, device.model, val)
     response = requests.put(endpoint, data=json.dumps(payload),
