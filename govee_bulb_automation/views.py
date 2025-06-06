@@ -255,22 +255,28 @@ def theme(request):
     try:
         data = json.loads(request.body)
         action = data.get('action')
+        color_payload = None
+        brightness_payload = None
         if action == 'Clair_Obscur':
             color_payload = {"color": '#57173b'}
-            color_response = requests.post(
-                url='https://gobeyondthescreen.org/set_color/',
-                data=json.dumps(color_payload),
-                headers={'Content-Type': 'application/json',
-                         'X-Auth-Token': SECRET_TOKEN,
-                         }
-            )
             brightness_payload = {"brightness": 2}
-            brightness_response = requests.post(
-                url='https://gobeyondthescreen.org/set_brightness/',
-                data=json.dumps(brightness_payload),
-                headers={'Content-Type': 'application/json',
-                         'X-Auth-Token': SECRET_TOKEN,}
-            )
+        elif action == 'Last_Of_Us_2':
+            color_payload = {"color": '#b34f34'}
+            brightness_payload = {"brightness": 4}
+
+        color_response = requests.post(
+            url='https://gobeyondthescreen.org/set_color/',
+            data=json.dumps(color_payload),
+            headers={'Content-Type': 'application/json',
+                     'X-Auth-Token': SECRET_TOKEN,
+                     }
+        )
+        brightness_response = requests.post(
+            url='https://gobeyondthescreen.org/set_brightness/',
+            data=json.dumps(brightness_payload),
+            headers={'Content-Type': 'application/json',
+                     'X-Auth-Token': SECRET_TOKEN,}
+        )
 
         return JsonResponse({'success': True})
     except Exception as e:
