@@ -504,8 +504,8 @@ header {
 
 
 .graphic-button {
-    width: 60vw;
-    max-width: 400px;
+    /*width: 60vw;*/
+    /*max-width: 400px;*/
     aspect-ratio: 3 / 1; /* Rectangle shape */
     border-radius: 1rem;
     overflow: hidden;

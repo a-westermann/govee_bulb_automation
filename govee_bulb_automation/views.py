@@ -269,7 +269,7 @@ def theme(request):
         data = json.loads(request.body)
         action = data.get('action')
         if action == 'Clair_Obscur':
-            color_payload = {"color": '#ff3baa'}
+            color_payload = {"color": '#57173b'}
             color_response = requests.post(
                 url='https://gobeyondthescreen.org/set_color/',
                 data=json.dumps(color_payload),
