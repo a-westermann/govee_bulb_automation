@@ -22,13 +22,24 @@
 </div>
 
 <!-- Light Toggle Buttons -->
-<div class="d-flex justify-content-center overflow-auto mb-4" style="gap: 0.5rem; white-space: nowrap;">
-    <button type="button" class="btn btn-success btn-lg me-2" onclick="toggleLight('on')">Turn On</button>
-    <button type="button" class="btn btn-danger btn-lg me-2" onclick="toggleLight('off')">Turn Off</button>
-    <button type="button" class="btn buttons btn-lg me-2" onclick="weatherSync()">Weather Sync</button>
-    <button type="button" class="btn buttons btn-lg" onclick="auto()">Auto</button>
+<div class="row justify-content-center mb-4">
+    <div class="col-auto">
+        <button type="button" class="btn btn-success btn-lg px-4" style="min-width: 140px;"
+                onclick="toggleLight('on')">Turn On</button>
+    </div>
+    <div class="col-auto">
+        <button type="button" class="btn btn-danger btn-lg px-4" style="min-width: 140px;"
+                onclick="toggleLight('off')">Turn Off</button>
+    </div>
+    <div class="col-auto">
+        <button type="button" class="btn buttons btn-lg px-4" style="min-width: 140px;"
+                onclick="weatherSync()">Weather Sync</button>
+    </div>
+    <div class="col-auto">
+        <button type="button" class="btn buttons btn-lg px-4" style="min-width: 140px;"
+                onclick="auto()">Auto</button>
+    </div>
 </div>
-
 
 <!-- Brightness -->
 <div class="card p-3 mb-4">
