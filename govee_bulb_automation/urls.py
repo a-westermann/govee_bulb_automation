@@ -9,4 +9,5 @@ urlpatterns = [
     path('set_brightness/', set_brightness, name='set_brightness'),
     path('weather_sync/', weather_sync, name='weather_sync'),
     path('auto/', auto, name='auto'),
+    path('theme/', theme, name='theme'),
 ]
