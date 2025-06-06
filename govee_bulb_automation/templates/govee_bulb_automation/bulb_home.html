@@ -21,63 +21,56 @@
     </div>
 
     <!-- Light Toggle Buttons -->
-    <div class="row justify-content-center mb-4">
-        <div class="col-auto">
-            <button type="button" class="btn btn-success btn-lg px-5" onclick="toggleLight('on')">Turn On</button>
-        </div>
-        <div class="col-auto">
-            <button type="button" class="btn btn-danger btn-lg px-5" onclick="toggleLight('off')">Turn Off</button>
-        </div>
-        <div class="col-auto">
-            <button type="button" class="btn buttons btn-lg px-5" onclick="weatherSync()">Weather Sync</button>
-        </div>
-        <div class="col-auto">
-            <button type="button" class="btn buttons btn-lg px-5" onclick="auto()">Auto</button>
-        </div>
+    <div class="row justify-content-center gap-2 mb-4">
+        <button type="button" class="btn btn-success btn-lg px-4" onclick="toggleLight('on')">Turn On</button>
+        <button type="button" class="btn btn-danger btn-lg px-4" onclick="toggleLight('off')">Turn Off</button>
+        <button type="button" class="btn buttons btn-lg px-4" onclick="weatherSync()">Weather Sync</button>
+        <button type="button" class="btn buttons btn-lg px-4" onclick="auto()">Auto</button>
     </div>
+</div>
 
-    <!-- Brightness -->
-    <div class="card p-3 mb-4">
-        <h5 class="mb-3">Set Brightness</h5>
-        <div id="brightness-bar" class="w-100 rounded-pill"
-             style="height: 30px; background: linear-gradient(to right, #000000, #fff); cursor: pointer; position: relative;">
-            <div id="brightness-indicator"
-                 style="position: absolute; top: 0; height: 100%; width: 2px; background: yellow;"></div>
-        </div>
+<!-- Brightness -->
+<div class="card p-3 mb-4">
+    <h5 class="mb-3">Set Brightness</h5>
+    <div id="brightness-bar" class="w-100 rounded-pill"
+         style="height: 30px; background: linear-gradient(to right, #000000, #fff); cursor: pointer; position: relative;">
+        <div id="brightness-indicator"
+             style="position: absolute; top: 0; height: 100%; width: 2px; background: yellow;"></div>
     </div>
+</div>
 
 
-    <!-- Temperature Grid -->
-    <div class="card shadow-sm p-4 mb-5">
-        <h5 class="mb-3">Select Temperature</h5>
-        <div id="temperature-bar" class="w-100 rounded-pill position-relative"
-             style="height: 30px; background: linear-gradient(to right, #FFB74D, #FFD54F, #FFF176, #ffffa4, #ffffa6, #ffffc8, #ffffff); cursor: pointer;">
-            <div id="temp-indicator"
-                 style="position: absolute; top: 0; height: 100%; width: 2px; background: black;"></div>
-        </div>
+<!-- Temperature Grid -->
+<div class="card shadow-sm p-4 mb-5">
+    <h5 class="mb-3">Select Temperature</h5>
+    <div id="temperature-bar" class="w-100 rounded-pill position-relative"
+         style="height: 30px; background: linear-gradient(to right, #FFB74D, #FFD54F, #FFF176, #ffffa4, #ffffa6, #ffffc8, #ffffff); cursor: pointer;">
+        <div id="temp-indicator"
+             style="position: absolute; top: 0; height: 100%; width: 2px; background: black;"></div>
     </div>
+</div>
 
 
-    <!-- Color Picker -->
-    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
-    <div class="card shadow-sm p-4 text-center">
-        <h5 class="mb-3">Choose Color</h5>
-        <div class="d-flex justify-content-center">
-            <div id="colorWheel"></div>
-        </div>
+<!-- Color Picker -->
+<script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5"></script>
+<div class="card shadow-sm p-4 text-center">
+    <h5 class="mb-3">Choose Color</h5>
+    <div class="d-flex justify-content-center">
+        <div id="colorWheel"></div>
     </div>
-    <div class="mt-3">
-        <button class="btn btn-primary" onclick="applyColor()">Apply Color</button>
-    </div>
+</div>
+<div class="mt-3">
+    <button class="btn btn-primary" onclick="applyColor()">Apply Color</button>
+</div>
 
 
-    <!-- Graphic buttons-->
-    <div class="w-full flex flex-wrap justify-center gap-6 p-6" style="padding-top: 80px">
-        <div class="graphic-button" data-action="Clair_Obscur">
-            <img src="{% static 'clair_obscur.PNG' %}" alt="Clair_Obscur" />
-        </div>
-        <!-- Just copy/paste to add more -->
+<!-- Graphic buttons-->
+<div class="w-full flex flex-wrap justify-center gap-6 p-6" style="padding-top: 80px">
+    <div class="graphic-button" data-action="Clair_Obscur">
+        <img src="{% static 'clair_obscur.PNG' %}" alt="Clair_Obscur" />
     </div>
+    <!-- Just copy/paste to add more -->
+</div>
 
 </div>
 

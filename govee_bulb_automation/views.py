@@ -16,9 +16,20 @@ from datetime import datetime
 
 
 logger = logging.getLogger('govee_bulb_automation')
-DEVICES = None
-WEATHER_SYNC = False
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
+DEVICE_CACHE = '/var/tmp/devices.json'
+
+
+def cache_devices() -> list[Device]:
+    devices = get_devices()
+    with open(DEVICE_CACHE, 'w') as f:
+        json.dump([device.__dict__ for device in devices], f)
+    return devices
+
+def get_cached_devices() -> list[Device]:
+    with open(DEVICE_CACHE, 'r') as f:
+        raw_devices = json.load(f)
+        return [Device(**d) for d in raw_devices]
 
 
 def require_authenticated_session(view_func):
@@ -48,10 +59,8 @@ def bulb_home(request):
         return JsonResponse({'success': False, 'message': 'Forbidden'}, status=403)
     else:
         request.session['authenticated'] = True
-    global DEVICES
-    if not DEVICES:
-        DEVICES = get_devices()
-    context = {'devices':DEVICES }
+    devices = cache_devices()
+    context = {'devices':devices}
     return render(request, 'govee_bulb_automation/bulb_home.html',
                   context=context)
 
@@ -68,12 +77,8 @@ def call_api_put(endpoint, payload_func, device, val):
 @csrf_exempt
 @require_authenticated_session
 def toggle_light(request):
-    global WEATHER_SYNC
-    WEATHER_SYNC = False
     set_auto(False)
-    global DEVICES
-    if not DEVICES:
-        DEVICES = get_devices()
+    devices = get_cached_devices()
     data = json.loads(request.body)
     state = data.get('state')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
@@ -95,11 +100,7 @@ def toggle_light(request):
 @csrf_exempt
 @require_authenticated_session
 def set_temperature(request):
-    global DEVICES
-    if not DEVICES:
-        DEVICES = get_devices()
-    global WEATHER_SYNC
-    WEATHER_SYNC = False
+    devices = get_cached_devices()
     set_auto(False)
 
     data = json.loads(request.body)
@@ -174,11 +175,7 @@ def auto(request):
 @csrf_exempt
 @require_authenticated_session
 def set_color(request):
-    global DEVICES
-    if not DEVICES:
-        DEVICES = get_devices()
-    global WEATHER_SYNC
-    WEATHER_SYNC = False
+    devices = get_cached_devices()
     set_auto(False)
     data = json.loads(request.body)
     hex_color = data.get('color')  # Format: '#rrggbb'
@@ -210,11 +207,7 @@ def hex_to_rgb(hex_color):
 @csrf_exempt
 @require_authenticated_session
 def set_brightness(request):
-    global DEVICES
-    if not DEVICES:
-        DEVICES = get_devices()
-    global WEATHER_SYNC
-    WEATHER_SYNC = False
+    devices = get_cached_devices()
     set_auto(False)
     data = json.loads(request.body)
     brightness = data.get('brightness')  # 0-100
@@ -236,19 +229,13 @@ def set_brightness(request):
 @csrf_exempt
 @require_authenticated_session
 def weather_sync(request):
-    global DEVICES
-    if not DEVICES:
-        DEVICES = get_devices()
+    devices = get_cached_devices()
     set_auto(False)
-    global WEATHER_SYNC
-    WEATHER_SYNC = True
-    # while WEATHER_SYNC:
     weather = get_weather()
     color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
     rgb = hex_to_rgb(color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
     responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
-    # sleep(60000)
 
     if responses:
         response = responses[0]
