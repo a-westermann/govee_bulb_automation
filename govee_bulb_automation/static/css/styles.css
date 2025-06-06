@@ -504,16 +504,15 @@ header {
 
 
 .graphic-button img {
-    border-radius: 16px;
-    display: block;
-    width: 100%;
+    max-width: 100%;
     height: auto;
+    display: block;
+    border-radius: 16px;
 }
 
 .graphic-button {
-    padding: 5px;
+    flex: 0 1 150px;
     box-sizing: border-box;
-    max-width: 300px; /* optional to keep a reasonable size */
 }
 
 .graphic-button:hover {
