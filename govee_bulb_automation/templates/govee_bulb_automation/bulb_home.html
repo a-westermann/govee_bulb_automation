@@ -70,6 +70,16 @@
     </div>
 </div>
 
+<!-- Graphic buttons-->
+<div class="w-full flex flex-wrap justify-center gap-6 p-6">
+  <div class="graphic-button" data-action="Clair_Obscur">
+    <img src="/static/images/clair_obscur.PNG" alt="Clair_Obscur" />
+  </div>
+  <!-- Just copy/paste to add more -->
+</div>
+
+
+
 </body>
 
 <!-- Toggle light -->
@@ -214,5 +224,33 @@
         });
     }
 </script>
+
+
+<!-- Graphic button-->
+<script>
+  document.querySelectorAll('.graphic-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const action = button.dataset.action;
+
+      fetch('/theme/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action })
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log(`Triggered action: ${action}`, data);
+      })
+      .catch(err => {
+        console.error('API call failed:', err);
+      });
+    });
+  });
+  }
+</script>
+
+
 
 </html>

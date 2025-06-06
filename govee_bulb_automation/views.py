@@ -261,3 +261,31 @@ def weather_sync(request):
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
+
+@csrf_exempt
+@require_authenticated_session
+def theme(request):
+    try:
+        data = json.loads(request.body)
+        action = data.get('action')
+        if action == 'Clair_Obscur':
+            color_payload = {"color": '#ff3baa'}
+            color_response = requests.post(
+                url='https://gobeyondthescreen.org/set_color/',
+                data=json.dumps(color_payload),
+                headers={'Content-Type': 'application/json',
+                         'X-Auth-Token': SECRET_TOKEN,
+                         }
+            )
+            brightness_payload = {"brightness": 2}
+            brightness_response = requests.post(
+                url='https://gobeyondthescreen.org/set_brightness/',
+                data=json.dumps(brightness_payload),
+                headers={'Content-Type': 'application/json',
+                         'X-Auth-Token': SECRET_TOKEN,}
+            )
+
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'message': str(e)})
+
