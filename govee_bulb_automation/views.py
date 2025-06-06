@@ -82,7 +82,7 @@ def toggle_light(request):
     data = json.loads(request.body)
     state = data.get('state')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, get_toggle_light, device, state) for device in DEVICES]
+    responses = [call_api_put(endpoint, get_toggle_light, device, state) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
@@ -106,7 +106,7 @@ def set_temperature(request):
     data = json.loads(request.body)
     temperature = data.get('temperature')
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, get_set_temp, device, temperature) for device in DEVICES]
+    responses = [call_api_put(endpoint, get_set_temp, device, temperature) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
@@ -181,7 +181,7 @@ def set_color(request):
     hex_color = data.get('color')  # Format: '#rrggbb'
     rgb = hex_to_rgb(hex_color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
+    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
@@ -212,7 +212,7 @@ def set_brightness(request):
     data = json.loads(request.body)
     brightness = data.get('brightness')  # 0-100
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, get_set_brightness, device, brightness) for device in DEVICES]
+    responses = [call_api_put(endpoint, get_set_brightness, device, brightness) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
@@ -235,7 +235,7 @@ def weather_sync(request):
     color = get_color_from_condition(weather['weather'][0]['main'], weather['weather'][0]['description'])
     rgb = hex_to_rgb(color)
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
-    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in DEVICES]
+    responses = [call_api_put(endpoint, get_set_color, device, rgb) for device in devices]
 
     if responses:
         response = responses[0]
