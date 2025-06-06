@@ -13,7 +13,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<div class="container-fluid py-5 px-3">
+<div class="container-fluid py-1 px-3">
     <!-- Heading -->
     <div class="text-center mb-5">
         <h1 class="display-5 fw-bold">Light Control</h1>
@@ -22,20 +22,13 @@
 </div>
 
 <!-- Light Toggle Buttons -->
-<div class="row justify-content-center mb-4">
-    <div class="col-auto">
-        <button type="button" class="btn btn-success btn-lg px-4" onclick="toggleLight('on')">Turn On</button>
-    </div>
-    <div class="col-auto">
-        <button type="button" class="btn btn-danger btn-lg px-4" onclick="toggleLight('off')">Turn Off</button>
-    </div>
-    <div class="col-auto">
-        <button type="button" class="btn buttons btn-lg px-4" onclick="weatherSync()">Weather Sync</button>
-    </div>
-    <div class="col-auto">
-        <button type="button" class="btn buttons btn-lg px-4" onclick="auto()">Auto</button>
-    </div>
+<div class="d-flex justify-content-center overflow-auto mb-4" style="gap: 0.5rem; white-space: nowrap;">
+    <button type="button" class="btn btn-success btn-lg me-2" onclick="toggleLight('on')">Turn On</button>
+    <button type="button" class="btn btn-danger btn-lg me-2" onclick="toggleLight('off')">Turn Off</button>
+    <button type="button" class="btn buttons btn-lg me-2" onclick="weatherSync()">Weather Sync</button>
+    <button type="button" class="btn buttons btn-lg" onclick="auto()">Auto</button>
 </div>
+
 
 <!-- Brightness -->
 <div class="card p-3 mb-4">
