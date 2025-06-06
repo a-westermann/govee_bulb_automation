@@ -55,10 +55,12 @@ def require_authenticated_session(view_func):
 
 def bulb_home(request):
     token = request.GET.get("token")
-    if token != SECRET_TOKEN:
-        return JsonResponse({'success': False, 'message': 'Forbidden'}, status=403)
-    else:
+    if token == SECRET_TOKEN:
         request.session['authenticated'] = True
+    # if token != SECRET_TOKEN:
+    #     return JsonResponse({'success': False, 'message': 'Forbidden'}, status=403)
+    # else:
+    #     request.session['authenticated'] = True
     devices = cache_devices()
     context = {'devices':devices}
     return render(request, 'govee_bulb_automation/bulb_home.html',
