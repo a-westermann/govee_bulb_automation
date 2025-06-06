@@ -23,24 +23,16 @@
 </div>
 
 <!-- Light Toggle Buttons -->
-<!--<div class="row justify-content-center mb-4">-->
-<!--    <div class="col-auto">-->
-<!--        <button type="button" class="btn btn-success btn-lg px-2" style="min-width: 180px;"-->
-<!--                onclick="toggleLight('on')">Turn On</button>-->
-<!--    </div>-->
-<!--    <div class="col-auto">-->
-<!--        <button type="button" class="btn btn-danger btn-lg px-2" style="min-width: 180px;"-->
-<!--                onclick="toggleLight('off')">Turn Off</button>-->
-<!--    </div>-->
-<!--    <div class="col-auto">-->
-<!--        <button type="button" class="btn buttons btn-lg px-2" style="min-width: 180px;"-->
-<!--                onclick="weatherSync()">Weather Sync</button>-->
-<!--    </div>-->
-<!--    <div class="col-auto">-->
-<!--        <button type="button" class="btn buttons btn-lg px-2" style="min-width: 180px;"-->
-<!--                onclick="auto()">Auto</button>-->
-<!--    </div>-->
-<!--</div>-->
+<div class="d-flex flex-wrap justify-content-center gap-3 mb-4 px-3">
+    <button type="button" class="btn btn-success btn-lg flex-grow-1" style="min-width: 140px; max-width: 180px;"
+            onclick="toggleLight('on')">Turn On</button>
+    <button type="button" class="btn btn-danger btn-lg flex-grow-1" style="min-width: 140px; max-width: 180px;"
+            onclick="toggleLight('off')">Turn Off</button>
+    <button type="button" class="btn buttons btn-lg flex-grow-1" style="min-width: 140px; max-width: 180px;"
+            onclick="weatherSync()">Weather Sync</button>
+    <button type="button" class="btn buttons btn-lg flex-grow-1" style="min-width: 140px; max-width: 180px;"
+            onclick="auto()">Auto</button>
+</div>
 
 <!-- Brightness -->
 <div class="card p-3 mb-4">
