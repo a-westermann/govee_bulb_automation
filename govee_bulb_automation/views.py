@@ -110,18 +110,22 @@ def toggle_light(request):
     set_auto(False)
     devices = get_cached_devices()
     data = json.loads(request.body)
-    state = data.get('state')
+    raw_state = (data.get('state') or '').strip().lower()
+    state = raw_state if raw_state in ('on', 'off') else None
+    if not state:
+        return JsonResponse({'success': False, 'response': {'message': 'state must be "on" or "off"'}})
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
     responses = [call_api_put(endpoint, get_toggle_light, device, state) for device in devices]
     if responses:
         response = responses[0]
         decoded = response.json()
         api_response = {
-            'status_code': decoded['code'],
-            'response': decoded['message']
+            'status_code': decoded.get('code'),
+            'response': decoded.get('message', ''),
         }
-        success = api_response['status_code'] == 200
-        if success and state in ('on', 'off'):
+        code = decoded.get('code')
+        success = code in (200, '200') or response.status_code == 200
+        if state and (success or response.ok):
             _persist_lights_state(state)
         return JsonResponse({'success': success, 'response': api_response})
     else:
