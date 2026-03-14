@@ -18,6 +18,7 @@ from datetime import datetime
 logger = logging.getLogger('govee_bulb_automation')
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 DEVICE_CACHE = '/var/tmp/devices.json'
+LIGHTS_STATE_FILE = '/var/tmp/govee_lights_state.txt'
 
 
 def cache_devices() -> list[Device]:
@@ -76,6 +77,33 @@ def call_api_put(endpoint, payload_func, device, val):
     return response
 
 
+def _persist_lights_state(state: str) -> None:
+    """Persist current lights state for GET /status/."""
+    try:
+        with open(LIGHTS_STATE_FILE, 'w') as f:
+            f.write(state)
+    except OSError as e:
+        logger.warning("Could not persist lights state: %s", e)
+
+
+def _get_persisted_lights_state() -> str:
+    """Read last known lights state. Defaults to 'off' if never set."""
+    try:
+        with open(LIGHTS_STATE_FILE, 'r') as f:
+            return f.read().strip().lower() or 'off'
+    except (OSError, FileNotFoundError):
+        return 'off'
+
+
+@require_authenticated_session
+def status(request):
+    """GET /status/ - returns current lights state for lights_client.get_lights_state()."""
+    state = _get_persisted_lights_state()
+    if state not in ('on', 'off'):
+        state = 'off'
+    return JsonResponse({'state': state})
+
+
 @csrf_exempt
 @require_authenticated_session
 def toggle_light(request):
@@ -92,7 +120,10 @@ def toggle_light(request):
             'status_code': decoded['code'],
             'response': decoded['message']
         }
-        return JsonResponse({'success': api_response['status_code'] == 200, 'response': api_response})
+        success = api_response['status_code'] == 200
+        if success and state in ('on', 'off'):
+            _persist_lights_state(state)
+        return JsonResponse({'success': success, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
