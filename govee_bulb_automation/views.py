@@ -203,6 +203,7 @@ def auto_process():
 @csrf_exempt
 @require_authenticated_session
 def auto(request):
+    _persist_lights_state('on')
     # threading.Thread(target=auto_process(), daemon=True).start()
     auto_process()
     return JsonResponse({'success': True, 'message': 'Auto mode started'})
