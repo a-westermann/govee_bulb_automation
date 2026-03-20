@@ -19,6 +19,7 @@ logger = logging.getLogger('govee_bulb_automation')
 SECRET_TOKEN = open('/home/ubuntu/govee_token').read().strip()
 DEVICE_CACHE = '/var/tmp/devices.json'
 LIGHTS_STATE_FILE = '/var/tmp/govee_lights_state.txt'
+BRIGHTNESS_STATE_FILE = '/var/tmp/govee_brightness_state.txt'
 
 
 def cache_devices() -> list[Device]:
@@ -95,13 +96,37 @@ def _get_persisted_lights_state() -> str:
         return 'off'
 
 
+def _persist_brightness_value(brightness: int) -> None:
+    """Persist last known brightness value for GET /status/."""
+    try:
+        with open(BRIGHTNESS_STATE_FILE, 'w') as f:
+            f.write(str(int(brightness)))
+    except OSError as e:
+        logger.warning("Could not persist brightness: %s", e)
+
+
+def _get_persisted_brightness_value() -> int:
+    """Read last known brightness value. Defaults to 0 if never set."""
+    try:
+        with open(BRIGHTNESS_STATE_FILE, 'r') as f:
+            raw = f.read().strip()
+            brightness = int(raw)
+            if brightness < 0 or brightness > 100:
+                return 0
+            return brightness
+    except (OSError, FileNotFoundError, ValueError):
+        return 0
+
+
 @require_authenticated_session
 def status(request):
     """GET /status/ - returns current lights state for lights_client.get_lights_state()."""
     state = _get_persisted_lights_state()
     if state not in ('on', 'off'):
         state = 'off'
-    return JsonResponse({'state': state})
+    # If lights are off, we report brightness as 0 regardless of the last set value.
+    brightness = 0 if state == 'off' else _get_persisted_brightness_value()
+    return JsonResponse({'state': state, 'brightness': brightness})
 
 
 @csrf_exempt
@@ -194,6 +219,8 @@ def auto_process():
             headers={'Content-Type': 'application/json',
                      'X-Auth-Token': SECRET_TOKEN,}
         )
+        if getattr(brightness_response, "ok", False):
+            _persist_brightness_value(brightness)
         set_auto(True)  # Set auto = True after the other methods!
     except Exception as e:
         logger.error(f"Error in auto_worker: {e}")
@@ -248,7 +275,14 @@ def set_brightness(request):
     devices = get_cached_devices()
     set_auto(False)
     data = json.loads(request.body)
-    brightness = data.get('brightness')  # 0-100
+    brightness_raw = data.get('brightness')
+    try:
+        brightness = int(brightness_raw)  # expected 0-100
+    except (TypeError, ValueError):
+        return JsonResponse(
+            {'success': False, 'response': {'message': 'brightness must be an integer 0-100'}}
+        )
+    brightness = max(0, min(100, brightness))
     endpoint = 'https://developer-api.govee.com/v1/devices/control'
     responses = [call_api_put(endpoint, get_set_brightness, device, brightness) for device in devices]
     if responses:
@@ -258,7 +292,10 @@ def set_brightness(request):
             'status_code': decoded['code'],
             'response': decoded['message']
         }
-        return JsonResponse({'success': api_response['status_code'] == 200, 'response': api_response})
+        success = api_response['status_code'] == 200 or api_response['status_code'] == '200'
+        if success:
+            _persist_brightness_value(brightness)
+        return JsonResponse({'success': success, 'response': api_response})
     else:
         api_response = {}
         return JsonResponse({'success': False, 'response': api_response})
@@ -315,6 +352,9 @@ def theme(request):
             headers={'Content-Type': 'application/json',
                      'X-Auth-Token': SECRET_TOKEN,}
         )
+
+        if getattr(brightness_response, "ok", False) and brightness_payload and 'brightness' in brightness_payload:
+            _persist_brightness_value(brightness_payload['brightness'])
 
         return JsonResponse({'success': True})
     except Exception as e:
